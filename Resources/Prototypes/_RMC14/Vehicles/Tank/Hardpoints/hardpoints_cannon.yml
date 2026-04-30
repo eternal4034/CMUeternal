@@ -181,7 +181,8 @@
     soundGunshot:
       path: /Audio/_AU14/Weapons/vehicle/autocannon.ogg
       params:
-        variation: 0.06    cameraRecoilScalar: 0
+        variation: 0.06
+    cameraRecoilScalar: 0
   - type: RMCWeaponAccuracy
     accuracyMultiplier: 6
     accuracyMultiplierUnwielded: 6
@@ -274,4 +275,3 @@
     useContainerOwner: false
   - type: HardpointVisual
     vehicleState: drgn_flamer_0
-
