@@ -191,7 +191,7 @@
           - HardpointItem
   - type: Damageable
     damageContainer: StructuralMarine
-    damageModifierSet: StructuralMarine
+    damageModifierSet: VehicleFrameHumvee
   - type: HardpointIntegrity
     maxIntegrity: 1000
     repairFuelCost: 12
@@ -273,7 +273,7 @@
   components:
   - type: Damageable
     damageContainer: StructuralMarine
-    damageModifierSet: StructuralMarine
+    damageModifierSet: VehicleFrameHumvee
   - type: HardpointIntegrity
     maxIntegrity: 1000
     repairFuelCost: 12
