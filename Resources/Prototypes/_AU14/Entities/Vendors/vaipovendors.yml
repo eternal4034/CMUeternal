@@ -351,6 +351,8 @@
         amount: 60
       - id: AU14Tourniquet
         amount: 60
+      - id: CMUSplintItem
+        amount: 60
       - id: CMOintment10
         amount: 60
       - id: CMBurnKit10
