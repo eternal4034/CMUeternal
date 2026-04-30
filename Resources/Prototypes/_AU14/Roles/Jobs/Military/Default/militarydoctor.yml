@@ -28,6 +28,7 @@
   accessGroups:
   - AU14GovforCorpsman
   - AU14GovforSquad
+  - CMAccessMedical
   overwatchSortPriority: -6
   overwatchShowName: true
   overwatchRoleName: Doctor

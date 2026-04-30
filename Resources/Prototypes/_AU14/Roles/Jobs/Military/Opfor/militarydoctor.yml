@@ -28,6 +28,7 @@
   accessGroups:
   - AU14OpforCorpsman
   - AU14OpforSquad
+  - CMAccessMedical
   overwatchSortPriority: -6
   overwatchShowName: true
   overwatchRoleName: Doctor
