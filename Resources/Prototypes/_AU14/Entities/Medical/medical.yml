@@ -402,6 +402,18 @@
     labelTextLocId: rmc-tramadol-container-label-text
 
 - type: entity
+  parent: CMPacketPills
+  id: AU14PacketPillsEmpty
+  name: pill packet
+  description: An empty pills packet.
+  components:
+  - type: Sprite
+    state: pill_packet
+  - type: PhysicalComposition
+    materialComposition:
+      RMCPlastic: 100
+
+- type: entity
   parent: CMPillCanister
   id: AU14PillCanisterParacetamol
   name: paracetamol pill bottle

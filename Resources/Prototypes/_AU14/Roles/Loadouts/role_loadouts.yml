@@ -436,6 +436,7 @@
   groups:
   - GOVFORDoctorEquipmentAU14
   - GOVFORDoctorUniformAU14
+  - MedJacketMilitaryAU14
   - EyewearRMCPVE
   - MasksRMCPVE
   - HeadwearRMCPVE

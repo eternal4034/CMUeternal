@@ -20,6 +20,8 @@
         amount: 40
       - id: AU14Tourniquet
         amount: 30
+      - id: CMUSplintItem
+        amount: 25
       - id: CMBurnKit10
         amount: 25
       - id: CMTraumaKit10
