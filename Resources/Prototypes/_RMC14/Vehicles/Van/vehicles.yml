@@ -7,10 +7,13 @@
   - type: Vehicle
     movementKind: Grid
   - type: Clickable
+  - type: RMCIgnoreGhostInteractionLimits
+  - type: RequireProjectileTarget
   - type: GridVehicleMover
     maxSpeed: 8
     acceleration: 5
     deceleration: 12
+    turnDelay: 0.25
     pushCooldown: 2
     xenoBlockMinimumSize: Immobile
     xenoPushMinimumSize: Immobile
@@ -112,6 +115,12 @@
   - type: VehicleWeapons
   - type: InputMover
   - type: ItemSlots
+  - type: ContainerContainer
+    containers:
+      wheel-1: !type:ContainerSlot
+        showEnts: false
+        occludes: true
+        ent: null
   - type: HardpointSlots
     vehicleFamily: Van
     slots:
@@ -124,10 +133,14 @@
         - VehicleWheelItem
   - type: VehicleWheelSlots
     slotCount: 1
+    slots:
+    - wheel-1
   - type: HardpointIntegrity
     maxIntegrity: 1000
+    integrity: 1000
     repairFuelCost: 10
     bypassEntryOnZero: true
+  - type: HardpointState
   - type: Appearance
   - type: VehicleEnter
     interiorPath: /Maps/_RMC14/Vehicles/van_interior.yml
@@ -201,6 +214,7 @@
     maxSpeed: 8
     acceleration: 5
     deceleration: 12
+    turnDelay: 0.25
     pushCooldown: 2
     xenoBlockMinimumSize: Immobile
     xenoPushMinimumSize: Immobile
@@ -301,6 +315,12 @@
   - type: VehicleWeapons
   - type: InputMover
   - type: ItemSlots
+  - type: ContainerContainer
+    containers:
+      wheel-1: !type:ContainerSlot
+        showEnts: false
+        occludes: true
+        ent: null
   - type: HardpointSlots
     vehicleFamily: Van
     slots:
@@ -313,10 +333,14 @@
         - VehicleWheelItem
   - type: VehicleWheelSlots
     slotCount: 1
+    slots:
+    - wheel-1
   - type: HardpointIntegrity
     maxIntegrity: 1000
+    integrity: 1000
     repairFuelCost: 10
     bypassEntryOnZero: true
+  - type: HardpointState
   - type: Appearance
   - type: VehicleEnter
     interiorPath: /Maps/_RMC14/Vehicles/box_van_interior.yml

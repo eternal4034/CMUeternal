@@ -165,8 +165,8 @@
     thresholds:
     - range: 7
       falloff: 10
-  - type: RMCAntiVehicleDamage
-    multiplier: 8
+  - type: VehicleDamageMultiplier
+    multiplier: 5
 
 # 84mm AP
 
@@ -225,7 +225,7 @@
     thresholds:
     - range: 6
       falloff: 10
-  - type: RMCAntiVehicleDamage
-    multiplier: 9
+  - type: VehicleDamageMultiplier
+    multiplier: 10
 
 # TODO RMC14 84mm WP
