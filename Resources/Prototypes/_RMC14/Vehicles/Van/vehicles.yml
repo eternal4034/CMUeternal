@@ -376,8 +376,8 @@
 - type: entity
   parent: VehicleVanBase
   id: VehicleSPPVan
-  name: SPP van
-  description: A rugged transport van painted in SPP colors.
+  name: Kheshig-1 LMP
+  description: A mine-resistant, multi-purpose vehicle utilized by the UPP for groundside operations.
   components:
   - type: Sprite
     sprite: _RMC14/Structures/Vehicles/sppvan.rsi
@@ -418,8 +418,8 @@
 - type: entity
   parent: VehicleSPPVan
   id: VehicleSPPVanArmed
-  name: SPP van (armed)
-  description: An SPP van fitted with a roof-mounted weapon.
+  name: Kheshig-1 LMP (armed)
+  description: A mine-resistant, multi-purpose vehicle utilized by the UPP for groundside operations.
   components:
   - type: Sprite
     layers:
@@ -476,8 +476,8 @@
 - type: entity
   parent: VehicleSPPVan
   id: VehicleSPPVanMedical
-  name: SPP van (medical)
-  description: An SPP van marked for casualty evacuation and field treatment.
+  name: Kheshig-1 LMP (medical)
+  description: A mine-resistant, multi-purpose vehicle utilized by the UPP for groundside operations.
   components:
   - type: Sprite
     layers:
@@ -508,8 +508,8 @@
 - type: entity
   parent: VehicleSPPVan
   id: VehicleSPPVanPrisoner
-  name: SPP van (prisoner)
-  description: An SPP van refitted for prisoner transport.
+  name: Kheshig-1 LMP (prisoner transport)
+  description: A mine-resistant, multi-purpose vehicle utilized by the UPP for groundside operations.
   components:
   - type: Sprite
     layers:
@@ -540,8 +540,8 @@
 - type: entity
   parent: VehicleBoxVanBase
   id: VehicleSPPVanLogistics
-  name: SPP van (logistics)
-  description: An SPP logistics van fitted with an enlarged cargo body.
+  name: Kheshig-1 LMP (logistics)
+  description: A mine-resistant, multi-purpose vehicle utilized by the UPP for groundside operations.
   components:
   - type: Sprite
     sprite: _RMC14/Structures/Vehicles/sppvan_logistics.rsi

@@ -46,6 +46,9 @@
     totalIntensity: 1400
     intensitySlope: 1.5
     maxIntensity: 80
+  - type: ProjectileGrenade
+    fillPrototype: CMProjectileShrapnel
+    capacity: 25
     canCreateVacuum: false
   - type: ExplodeOnTrigger
 
@@ -79,6 +82,9 @@
     intensitySlope: 1.5
     maxIntensity: 100
     canCreateVacuum: false
+  - type: ProjectileGrenade
+    fillPrototype: CMProjectileShrapnel
+    capacity: 35
   - type: ExplodeOnTrigger
 
 - type: entity
@@ -115,9 +121,12 @@
   - type: Explosive
     explosionType: RMC
     totalIntensity: 1500
-    intensitySlope: 5
+    intensitySlope: 10
     maxIntensity: 100
     canCreateVacuum: false
+  - type: ProjectileGrenade
+    fillPrototype: CMProjectileShrapnel
+    capacity: 40
   - type: ExplodeOnTrigger
   - type: GibOnTrigger
     deleteItems: false
