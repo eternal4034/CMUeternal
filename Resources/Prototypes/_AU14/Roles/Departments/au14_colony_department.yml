@@ -40,7 +40,6 @@
   - AU14JobCivilianJournalist
   - AU14JobCivilianColonySynthetic
   - AU14JobCivilianUSASFRecruiter
-  - AU14JobColonyWorkingJoe
   departmentRadio: null
   headOfDepartment: null
   faction: colonist
@@ -105,6 +104,7 @@
   - AU14JobCivilianScientist
   - AU14JobCivilianKellandWarden
   - AU14JobCivilianCorporateAssistant
+  - AU14JobColonyWorkingJoe
 
 
 

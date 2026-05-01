@@ -242,7 +242,6 @@ public abstract class SharedRMCCameraSystem : EntitySystem
                 if (index >= 0)
                 {
                     comp.CameraIds.RemoveAt(index);
-
                     if (index < comp.CameraNames.Count)
                         comp.CameraNames.RemoveAt(index);
                 }
