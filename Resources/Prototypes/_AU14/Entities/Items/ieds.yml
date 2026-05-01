@@ -46,10 +46,10 @@
     totalIntensity: 1400
     intensitySlope: 1.5
     maxIntensity: 80
+    canCreateVacuum: false
   - type: ProjectileGrenade
     fillPrototype: CMProjectileShrapnel
     capacity: 25
-    canCreateVacuum: false
   - type: ExplodeOnTrigger
 
 - type: entity
