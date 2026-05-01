@@ -40,7 +40,7 @@
   - type: TimerStartOnSignal
   - type: DeviceLinkSink
     ports:
-      - Timer
+    - Timer
   - type: Explosive
     explosionType: RMC
     totalIntensity: 1400
@@ -75,7 +75,7 @@
   - type: TimerStartOnSignal
   - type: DeviceLinkSink
     ports:
-      - Timer
+    - Timer
   - type: Explosive
     explosionType: RMC
     totalIntensity: 1800
@@ -117,7 +117,7 @@
   - type: TimerStartOnSignal
   - type: DeviceLinkSink
     ports:
-      - Timer
+    - Timer
   - type: Explosive
     explosionType: RMC
     totalIntensity: 1500
