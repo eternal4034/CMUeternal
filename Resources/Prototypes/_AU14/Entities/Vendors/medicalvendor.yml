@@ -1,7 +1,7 @@
 - type: entity
   parent: ColMarTechBase
   id: AU14GeneralMedicalVendor
-  name: WeYu Medical Supply Vendor
+  name: We-Yu Medical Supply Vendor
   description: An automated supply vendor hooked up to a storage of medical supplies.
   suffix: AU14 MED
   components:
@@ -20,6 +20,8 @@
         amount: 40
       - id: AU14Tourniquet
         amount: 30
+      - id: CMUSplintItem
+        amount: 25
       - id: CMBurnKit10
         amount: 25
       - id: CMTraumaKit10
@@ -100,6 +102,8 @@
         amount: 25
       - id: CMPortableSurgicalBedSpawnFolded
         amount: 5
+      - id: RMCWheelchair
+        amount: 10
       - id: RMCBoxBodyBag
         amount: 4
       - id: RMCBoxSterileMask
@@ -144,7 +148,7 @@
     - name: Blood Packs
       entries:
       - id: CMBloodPackFull
-        amount: 20
+        amount: 35
     - name: Empty Packs
       entries:
       - id: CMBloodPack
