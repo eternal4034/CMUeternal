@@ -140,6 +140,8 @@
         amount: 4
       - id: RMCM276ShotgunShellLoadingRig
         amount: 6
+      - id: RMCBeltHolsterSMGPouch
+        amount: 5
       - id: RMCBeltHolsterPistol
         amount: 20
       - id: RMCBeltHolsterRevolver
