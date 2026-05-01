@@ -39,6 +39,7 @@
     - AUPlanetShepherdsPride
     #- AUPlanetLV624
     - CMUPlanetLament
+    - AUPlanetStableGarrison
     #- AUPlanetLV747
     #- AUPlanetSorokyne
     #- AUPlanetLV759 removed pending rework
@@ -57,18 +58,18 @@
   description: Investigate a mysterious distress signal as government forces.
   requiresGovforVote: true
   supportedPlanets:
-  - AUPlanetShepherdsPride
-  - AUPlanetLV747
+#  - AUPlanetShepherdsPride
+#  - AUPlanetLV747
   #- AUPlanetFlight
   - AUPlanetLV327
    - AUPlanetSorokyne
   - AUPlanetCorsatStation
-  - AUPlanetStableGarrison
+#  - AUPlanetStableGarrison
   - AUPlanetTrijent
-  - AuPlanetFiorina
+#  - AuPlanetFiorina -removed due to load errors
   - AuPlanetKutjevo
   - AuPlanetShivasSnowball
-  - CMUPlanetLament
+#  - CMUPlanetLament
   rules:
   - AuVoteRule
   - PlatoonSpawn
@@ -92,7 +93,7 @@
    # - AUPlanetLV624
    # - AUPlanetLV327
    # - AUPlanetSorokyne
-    #- AUPlanetStableGarrison
+    - AUPlanetStableGarrison
     - CMUPlanetLament
 
 - type: gamePreset
@@ -157,8 +158,8 @@
       AU14JobGOVFORSquadRifleman: 75
       AU14JobGOVFORAuxSupportSynth: 2
       AU14JobGOVFORadvisor: 1
-      AU14JobGOVFORMilitaryDoctor: 1
-
+      AU14JobGOVFORMilitaryDoctor: 4
+      AU14JobGOVFORMilitaryPoliceMan: 2
 
 - type: entity
   id: AddOpfor

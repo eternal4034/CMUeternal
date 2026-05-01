@@ -1,4 +1,4 @@
-﻿# RMC-14 Barricade Modifers
+# RMC-14 Barricade Modifers
 
 # Base Barricade
 - type: damageModifierSet
@@ -68,3 +68,93 @@
     Blunt: 0.5
     Slash: 0.5
     Piercing: 0.5
+
+# Vehicle armor modifier sets
+- type: damageModifierSet
+  id: VehicleArmorBallistic
+  coefficients:
+    Blunt: 0.9
+    Slash: 0.603
+    Piercing: 0.603
+    Structural: 0.9
+    Caustic: 0.9
+
+- type: damageModifierSet
+  id: VehicleArmorCaustic
+  coefficients:
+    Blunt: 0.9
+    Slash: 0.9
+    Piercing: 0.9
+    Structural: 0.9
+    Caustic: 0.603
+
+- type: damageModifierSet
+  id: VehicleArmorConcussive
+  coefficients:
+    Blunt: 0.603
+    Slash: 0.9
+    Piercing: 0.9
+    Structural: 0.9
+    Caustic: 0.9
+
+- type: damageModifierSet
+  id: VehicleArmorPaladin
+  coefficients:
+    Blunt: 0.9
+    Slash: 0.9
+    Piercing: 0.9
+    Structural: 0.603
+    Caustic: 0.9
+
+- type: damageModifierSet
+  id: VehicleFrameTank
+  coefficients:
+    Blunt: 0.95
+    Slash: 0.7
+    Piercing: 0.3
+    Structural: 0.95
+    Caustic: 1.5
+
+- type: damageModifierSet
+  id: VehicleFrameAPC
+  coefficients:
+    Blunt: 0.95
+    Slash: 0.8
+    Piercing: 0.45
+    Structural: 0.95
+    Caustic: 1.5
+
+- type: damageModifierSet
+  id: VehicleFrameARC
+  coefficients:
+    Blunt: 0.95
+    Slash: 1
+    Piercing: 0.45
+    Structural: 0.95
+    Caustic: 1.5
+
+- type: damageModifierSet
+  id: VehicleFrameCLFVan
+  coefficients:
+    Blunt: 0.8
+    Slash: 0.9
+    Piercing: 0.8
+    Structural: 0.8
+
+- type: damageModifierSet
+  id: VehicleFrameHumvee
+  coefficients:
+    Blunt: 2
+    Slash: 1
+    Piercing: 2
+    Heat: 2
+    Structural: 1
+
+- type: damageModifierSet
+  id: VehicleFrameVan
+  coefficients:
+    Blunt: 2
+    Slash: 1
+    Piercing: 2
+    Heat: 2
+    Structural: 1

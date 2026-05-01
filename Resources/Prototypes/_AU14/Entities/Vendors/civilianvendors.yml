@@ -1,4 +1,4 @@
-﻿- type: entity
+- type: entity
   parent: ColMarTechBase
   id: AU14CivilianClothingVendor
   name: Civilian Clothing Wardrobe
@@ -136,6 +136,10 @@
       - id: AU14SlingSatchelBlue
       - id: RMCBeltUtilityGeneral
       - id: RMCPouchGeneral
+    - name: Field Tents
+      entries:
+      - id: RMCTentUNMCStandardFolded
+        amount: 1
 
 - type: entity
   parent: ColMarTechBase
@@ -158,12 +162,16 @@
     - name: Hard Hats
       choices: { CMUcivilianengineeringhats: 1 }
       entries:
+      - id: RMCHardhatOrange
+      - id: RMCHardHat
       - id: RMCHardhatWhite
+      - id: RMCHardhatBlue
     - name: Engineering Clothing
       takeAll: CMUEngineeringClothes
       entries:
       - id: AU14CivilianWeYuEngineerClothes
       - id: AU14CivilianFullSuitWeYuEngineer
+      - id: RMCWeldingGoggles
     - name: Waste Management Clothing
       takeAll: CMUEngineeringClothesWM
       entries:
@@ -190,6 +198,7 @@
       - id: CMBeltUtilityFilled
       - id: RMCBeltUtilityGeneral
       - id: RMCPouchGeneral
+      - id: AU14PouchIFAKFill
       - id: RMCPouchToolsFill
       - id: RMCPouchElectronics
       - id: RMCPouchConstruction
@@ -199,6 +208,7 @@
       entries:
       - id: RMCSynthResetKey
       - id: CMStampApproved
+      - id: RMCRadioHandheldColonyOff
 
 - type: entity
   parent: ColMarTechBase
@@ -213,6 +223,7 @@
     - state: "base"
       map: [ "enum.VendingMachineVisualLayers.BaseUnshaded", "enum.VendingMachineVisualLayers.Base" ]
   - type: CMAutomatedVendor
+    jobs: [ AU14JobCivilianNurse, AU14JobCivilianPhysician, AU14JobCivilianHeadPhysician, AU14JobCLFPhysician ]
     sections:
     - name: Shoes
       choices: { CMUcivilianmedicalshoes: 1 }
@@ -251,7 +262,9 @@
       choices: { CMUcivilianmedicaljackets: 2 }
       entries:
       - id: RMCLabcoat
-      - id: AU14CivilianJacketSnowSuit
+      - id: RMCLabcoatShort
+      - id: RMCLabcoatLong
+      - id: RMCCoatSnow
     - name: Medical Gloves
       choices: { CMUcivilianmedicalgloves: 1 }
       entries:
@@ -264,26 +277,26 @@
     - name: Essential Equipment
       takeAll: CMUEssentialEquipment
       entries:
-      - id: RMCGlassesMedicalHUDGlasses
-      - id: AU14CMDefibrillator
-      - id: CMHealthAnalyzer
-      - id: RMCFlashlightPen
-      - id: ClothingNeckStethoscope
-      - id: CMSurgicalLine
-      - id: CMSynthGraft
-      - id: CMSurgicalCaseFilled
+      - id: AU14VendorBundleMilitaryDoctorEssentials
+      - id: RMCSurgicalTray
     - name: Medical Pouches
       choices: { CMUMedicalPouchCivDoc: 2 }
       entries:
-      - id: RMCPouchAutoinjector
+      - id: AU14PouchAutoinjectorFilledMilitaryDoctor
       - id: RMCPouchFirstResponder
       - id: RMCPouchMedical
       - id: RMCPouchSyringeFill
     - name: Medical Storage
       choices: { CMUPlatoonMedicalStorage: 1 }
       entries:
-      - id: CMBeltMedical
       - id: CMBeltMedicBag
+      - id: AU14BeltMedicBagBlack
+    - name: Medical Equipment
+      entries:
+      - id: AU14CMDefibrillator
+        amount: 10
+      - id: AU14IVFoldableFolded
+        amount: 10
 
 - type: entity
   parent: ColMarTechBase
@@ -298,6 +311,7 @@
     - state: "base"
       map: [ "enum.VendingMachineVisualLayers.BaseUnshaded", "enum.VendingMachineVisualLayers.Base" ]
   - type: CMAutomatedVendor
+    jobs: [ AU14JobCivilianEmergencyResponseOfficer, AU14JobCLFPhysician ]
     sections:
     - name: Shoes
       choices: { CMUcivilianmedicalshoes: 1 }
@@ -336,9 +350,9 @@
     - name: Pouches
       choices: { CMUcivilianmedicalpouches: 3 }
       entries:
-      - id: RMCPouchAutoinjector
+      - id: RMCPouchAutoinjectorFill
       - id: RMCPouchFirstResponder
-      - id: RMCPouchFirstAid
+      - id: RMCPouchFirstAidPills
       - id: RMCPouchToolsSocFill
       - id: RMCPouchGeneralLarge
       - id: RMCWebbingDropPouch
@@ -346,8 +360,8 @@
       choices: { CMUcivilianmedicalbelts: 2 }
       entries:
       - id: CMBeltUtilityFilled
-      - id: CMBeltMedical
-      - id: CMBeltMedicBag
+      - id: CMBeltMedicalFilled
+      - id: CMBeltMedicBagFilled
     - name: Bags
       choices: { CMUcivilianmedicalbags: 1 }
       entries:
@@ -357,6 +371,7 @@
     - name: Assorted Utilities
       takeAll: CMUEssentialEquipmentAssorted
       entries:
+      - id: RMCGlassesMedicalHUDGlasses
       - id: CMRollerBedSpawnFolded
       - id: CMHealthAnalyzer
       - id: RMCFlashlightPen
@@ -470,4 +485,5 @@
       - id: RMCRadioHandheldColonyOff
       - id: CMFireExtinguisherPortable
       - id: RMCFlashlightPen
+      - id: AU14CMDefibrillator
       - id: RMCSynthResetKey

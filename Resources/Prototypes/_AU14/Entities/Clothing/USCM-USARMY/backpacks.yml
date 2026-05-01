@@ -6,12 +6,15 @@
   components:
   - type: Sprite
     sprite: _AU14/Clothing/Back/impbag.rsi
+<<<<<<< buildsfixed
   - type: Item
     size: Huge
   - type: Storage
     maxItemSize: Huge
     grid:
     - 0,0,22,1
+=======
+>>>>>>> master
 
 - type: entity
   parent: CMBackpack

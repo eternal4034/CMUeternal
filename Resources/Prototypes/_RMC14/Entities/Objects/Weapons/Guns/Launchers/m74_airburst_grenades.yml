@@ -72,6 +72,12 @@
   - type: CartridgeAmmo
     deleteOnSpawn: true
     proto: RMCAirBurstProjectileHornet
+  - type: Tag
+    tags:
+    - Grenade
+    - LauncherCompatibleGrenade
+    - RMCAirburstGrenade
+    - RMCGrenadeAGMH
 
 - type: entity
   parent: RMC40MMGrenadeM74AGMF
@@ -104,6 +110,7 @@
     tags:
     - Grenade
     - LauncherCompatibleGrenade
+    - RMCGrenadeAGMR
   - type: InheritAcid
 
 - type: entity
@@ -119,6 +126,20 @@
   - type: CartridgeAmmo
     deleteOnSpawn: true
     proto: RMCAirBurstProjectileSmoke
+  - type: Tag
+    tags:
+    - Grenade
+    - LauncherCompatibleGrenade
+    - RMCAirburstGrenade
+    - RMCGrenadeAGMS
+
+- type: entity
+  parent: RMC40MMGrenadeM74AGMS
+  id: RMC40MMGrenadeM74AGMSVehicle
+  components:
+  - type: CartridgeAmmo
+    deleteOnSpawn: true
+    proto: RMCAirBurstProjectileSmokeVehicle
 
 #PROJECTILES
 - type: entity
@@ -277,6 +298,18 @@
   - type: SoundOnTrigger
     sound: /Audio/Effects/smoke.ogg
   - type: DeleteOnTrigger
+
+- type: entity
+  parent: RMCAirBurstProjectileSmoke
+  id: RMCAirBurstProjectileSmokeVehicle
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: ProjectileSpread
+    proto: RMCAirBurstProjectileSmokeVehicle
+    count: 3
+    spread: 45
+  - type: TimedDespawn
+    lifetime: 2
 
 #Payload projectiles
 - type: entity
@@ -448,7 +481,6 @@
   - type: RMCStunOnHit
     stuns:
     - whitelist:
-        minMobSize: VerySmallXeno
       maxRange: 10
       stunTime: 1.6
       slowTime: 4
@@ -490,3 +522,12 @@
 
 - type: Tag
   id: RMCGrenadeAGMI
+
+- type: Tag
+  id: RMCGrenadeAGMS
+
+- type: Tag
+  id: RMCGrenadeAGMH
+
+- type: Tag
+  id: RMCGrenadeAGMR

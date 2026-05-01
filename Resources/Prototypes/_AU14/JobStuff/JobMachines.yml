@@ -98,6 +98,19 @@
           tags:
           - Vegetable
 
+- type: entity
+  parent: AUSubmissionPointBase
+  id: AUSubmissionPointFruit
+  name: Submission Point (Fruit)
+  description: A place to submit  resources for shipping.
+  components:
+  - type: ItemSlots
+    slots:
+      ItemCabinet:
+        whitelist:
+          tags:
+          - Fruit
+
 - type: Tag
   id: SteelOre
 
@@ -206,8 +219,8 @@
   description: Swipe your ID card on the machine to withdraw cash from your personal account.
   components:
   - type: Sprite
-    sprite: _RMC14/Structures/Machines/computer.rsi
-    state: terminal
+    sprite: _CMU14/Structures/Machines/atm.rsi
+    state: atm
   - type: InteractionOutline
   - type: UserInterface
     interfaces:

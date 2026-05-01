@@ -330,6 +330,12 @@
   - type: NoFTL
 
 - type: entity
+  parent: CMDropshipDestinationThirdPartyWhitelist
+  id: CMDropshipDestinationThirdPartyReturn
+  name: Return to Deep Space
+  description: Sends a third party dropship back to its holding pattern.
+
+- type: entity
   parent: MarkerBase
   id: CMDropshipDestinationGovforWhitelist
   name: dropship destination (govfor)

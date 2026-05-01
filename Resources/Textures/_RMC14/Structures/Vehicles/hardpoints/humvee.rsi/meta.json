@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Created or reused for RMC14",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "tires"
+    },
+    {
+      "name": "humveecannon"
+    },
+    {
+      "name": "humveeturret"
+    },
+    {
+      "name": "humveelauncher"
+    },
+    {
+      "name": "humveelauncher_installed"
+    },
+    {
+      "name": "snowplow"
+    },
+    {
+      "name": "overlight"
+    },
+    {
+      "name": "humveehatch"
+    }
+  ]
+}

@@ -19,7 +19,6 @@
         - MobMask
         layer:
         - MobLayer
-
   - type: GhostRole
     name: Ape
     description: OO OO AH AH
@@ -50,6 +49,29 @@
       0: Alive
       3000: Critical
       3300: Dead
+  - type: Bloodstream
+    bloodMaxVolume: 1000
+  - type: SlowOnDamage
+    speedModifierThresholds:
+      1000: 0.9
+      1300: 0.8
+      1600: 0.7
+      1900: 0.6
+      2200: 0.5
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 3000
+      behaviors:
+      - !type:GibBehavior
+        recursive: false
+  - type: Butcherable
+    butcheringType: Spike
+    spawned:
+    - id: FoodMeat
+      amount: 12
   - type: MobStateActions
     actions:
       Alive:
@@ -85,7 +107,6 @@
   - type: FireVisuals
     sprite: Mobs/Effects/onfire.rsi
     normalState: Generic_mob_burning
-
   - type: FootstepModifier
     footstepSoundCollection:
       collection: XenoFootstepLarge
@@ -115,7 +136,6 @@
     - type: IdExaminable
     - type: Thirst
     - type: MonkeyAccent
-
     - type: Internals
   - type: Hunger
     baseDecayRate: 0.08
@@ -170,6 +190,7 @@
   - type: Vocal
     sounds:
       Unsexed: ApeEmotes
+
 - type: emoteSounds
   id: ApeEmotes
   params:

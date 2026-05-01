@@ -279,6 +279,12 @@
   description: origin-is-egypt-description
   roundStart: true
 
+- type: Origin
+  id: ICSCColonies
+  name: origin-is-icsc-name
+  description: origin-is-icsc-description
+  roundStart: true
+
 # Corporate
 - type: Origin
   id: CorpMadagascar

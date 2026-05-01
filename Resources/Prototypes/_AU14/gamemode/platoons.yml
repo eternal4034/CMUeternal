@@ -18,6 +18,8 @@
     Pilot: AU14AircrewWeaponsVendor
     combattech: AU14ComtechGearVendor
     JuniorOfficer: AU14JOGenericVendor
+    MilitaryPolice: AU14MilitaryPolicemanVendorLACN
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
   possibleships:
     - USSBush
   #platoonflag: uaflag
@@ -46,8 +48,8 @@
     Pilot: AU14AircrewWeaponsVendor
     combattech: AU14ComtechGearVendor
     JuniorOfficer: AU14JOGenericVendor
-    ExtraVendor1: VMarkerOpforDeco5
-    Deco1: VMarkerOpforDeco5
+    MilitaryPolice: AU14MilitaryPolicemanVendorUSCM
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
   #platoonflag:  uaflag
   CompatibleDropships:
   - /Maps/_CMU14/Shuttles/alamo.yml
@@ -79,6 +81,8 @@
     JuniorOfficer: AU14JOGenericVendor
     SectionSergeant: AU14UPPSectionLeaderVendor
     Pilot: AU14UPPAirCrewWeaponsVendor
+    MilitaryPolice: AU14MilitaryPolicemanVendorUPP
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
   possibleships:
       - USSBush
 #  jobClassOverride:
@@ -96,8 +100,6 @@
   - /Maps/_CMU14/Shuttles/alamo.yml
   - /Maps/_CMU14/Shuttles/normandy.yml
   techTree: RMCIntelTechTree_ua
-
-
 
 - type: platoon
   id: WEYU
@@ -118,6 +120,8 @@
     SectionSergeant: AU14WYsupervisorequipmentvendor
     Pilot: AU14AircrewWeaponsVendor
     combattech: AU14ComtechGearVendor
+    MilitaryPolice: AU14MilitaryPolicemanGenericVendor
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
 #  jobClassOverride:
 #    SquadRifleman: AU14JobGOVFORSquadRiflemanWYPMC
 #    SectionSergeant: AU14JobGOVFORSectionSergeantWYPMC
@@ -134,7 +138,6 @@
   - /Maps/_CMU14/Shuttles/normandy.yml
   possibleships:
       - USSBush
-
   compatibleFighters:
   - /Maps/_AU14/ShuttlesDropships/f84owl.yml
   - /Maps/_AU14/ShuttlesDropships/ud_6.yml
@@ -160,6 +163,8 @@
     Pilot: AU14CMBCIUPilotVendor
     combattech: AU14ComtechGearVendor
     JuniorOfficer: AU14JOGenericVendor
+    MilitaryPolice: AU14MilitaryPolicemanGenericVendorCIU
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
 #  jobClassOverride:
 #    PlatCo: AU14JobGOVFORPlatCoCMBCIU
 #    SquadRifleman: AU14JobGOVFORSquadRiflemanCMBCIU
@@ -198,6 +203,8 @@
     Pilot: AU14AircrewWeaponsVendor
     combattech: AU14ComtechGearVendor
     JuniorOfficer: AU14JOGenericVendor
+    MilitaryPolice: AU14MilitaryPolicemanGenericVendor
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
   possibleships:
       - USSBush
   jobSlotOverride:
@@ -227,10 +234,13 @@
     Pilot: AU14AircrewWeaponsVendor
     combattech: AU14ComtechGearVendor
     JuniorOfficer: AU14JOGenericVendor
+    MilitaryPolice: AU14MilitaryPolicemanVendorUSCM
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
   possibleships:
       - USSBush
   CompatibleDropships:
   - /Maps/_CMU14/Shuttles/osprey.yml
+  - /Maps/_CMU14/Shuttles/normandy.yml
   compatibleFighters:
   - /Maps/_AU14/ShuttlesDropships/f84owl.yml
   - /Maps/_AU14/ShuttlesDropships/ud_6.yml
@@ -257,6 +267,8 @@
     JuniorOfficer: AU14JOGenericVendor
     ExtraVendor1: VMarkerOpforDeco5
     Deco1: VMarkerOpforDeco5
+    MilitaryPolice: AU14MilitaryPolicemanGenericVendor
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
   #platoonflag:  uaflag
   CompatibleDropships:
   - /Maps/_CMU14/Shuttles/alamo.yml
@@ -266,45 +278,6 @@
     - /Maps/_AU14/ShuttlesDropships/ud_6.yml
   possibleships:
       - USSBush
-  techTree: RMCIntelTechTree_ua
-
-- type: platoon
-  id: UNISC
-  name: UNISC Peacekeepers
-  lorePrimer: AU14PrimerPlatoonUNISC
-  reqlist: USCMCargoCatalog
-  VendorToMarker:
-    Rifleman: AU14USCMequipmentvendor
-    Clothing: AU14UNISCclothingequipmentvendor
-    Weapons: AU14UNISCWeaponsVendor
-    SWeapons: AU14UNISCWeaponsVendor
-    Corpsman: AU14UNISCcorpsmanvendor
-    Arifleman: AU14UNISCclothingequipmentvendor
-    Dcc: AU14UNISCaircrewvendor
-    OperationsOfficer: AU14UNISCcommandequipmentvendor
-    Rto: AU14RTOVendor
-    SectionSergeant: AU14UNISCsectionleaderequipmentvendor
-    Pilot: AU14AircrewWeaponsVendor
-    combattech: AU14ComtechGearVendor
-    JuniorOfficer: AU14JOGenericVendor
-#  jobClassOverride:
-#    SquadRifleman: AU14JobGOVFORSquadRifleman
-#    SectionSergeant: AU14JobGOVFORSectionSergeant
-#    PlatoonCorpsman: AU14JobGOVFORPlatoonCorpsman
-#    PlatCo: AU14JobGOVFORPlatCo
-#    SquadSergeant: AU14JobGOVFORSquadSergeant
-#    DSPilot: AU14JobGOVFORDSPilot
-#    RadioTelephoneOperator: AU14JobGOVFORRadioTelephoneOperator
-#    PlatOp: AU14JobGOVFORPlatOp
-#    DCC: AU14JobGOVFORDCC
-  CompatibleDropships:
-  - /Maps/_CMU14/Shuttles/alamo.yml
-  - /Maps/_CMU14/Shuttles/normandy.yml
-  possibleships:
-      - USSBush
-  compatibleFighters:
-  - /Maps/_AU14/ShuttlesDropships/f84owl.yml
-  - /Maps/_AU14/ShuttlesDropships/ud_6.yml
   techTree: RMCIntelTechTree_ua
 
 - type: platoon
@@ -328,6 +301,8 @@
     JuniorOfficer: AU14JOGenericVendor
     ExtraVendor1: VMarkerOpforDeco5
     Deco1: VMarkerOpforDeco5
+    MilitaryPolice: AU14MilitaryPolicemanGenericVendor
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
   CompatibleDropships:
   - /Maps/_CMU14/Shuttles/alamo.yml
   - /Maps/_CMU14/Shuttles/normandy.yml
@@ -360,6 +335,8 @@
     JuniorOfficer: AU14JOGenericVendor
     ExtraVendor1: VMarkerOpforDeco5
     Deco1: VMarkerOpforDeco5
+    MilitaryPolice: AU14MilitaryPolicemanGenericVendor
+    MilitaryDoctor: AU14MilitaryDoctorGenericVendor
   #jobClassOverride:
    # SquadRifleman: AU14JobGOVFORSquadRiflemanRMC
    # SectionSergeant: AU14JobGOVFORSectionSergeantRMC
@@ -386,7 +363,7 @@
 
 - type: lorePrimer
   id: AU14PrimerPlatoonLACN
-  PlatoonInfo: "Latin American  Colonial Navy. A branch of the United Americas' space forces, LACN specializes in rapid deployment and shock tactics for planetary assault and occupation."
+  PlatoonInfo: "Latin American Colonial Navy. A branch of the United Americas' space forces, LACN specializes in rapid deployment and shock tactics for planetary assault and occupation."
 
 - type: lorePrimer
   id: AU14PrimerPlatoonUSCM
@@ -412,10 +389,6 @@
 - type: lorePrimer
   id: AU14PrimerPlatoonProdigySF
   PlatoonInfo: "Prodigy Security Forces"
-
-- type: lorePrimer
-  id: AU14PrimerPlatoonUNISC
-  PlatoonInfo: "UNISC peacekeepers are a multinational force dedicated to maintaining stability and enforcing peace agreements across contested regions, often deployed in high-tension zones to prevent escalation."
 
 - type: lorePrimer
   id: AU14PrimerPlatoonVAIPO

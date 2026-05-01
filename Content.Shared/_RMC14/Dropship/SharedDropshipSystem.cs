@@ -1165,4 +1165,31 @@ public abstract class SharedDropshipSystem : EntitySystem
             EntityManager.Dirty(uid, comp);
         }
     }
+
+    public void SetDestinationShip(EntityUid uid, EntityUid? ship)
+    {
+        if (EntityManager.TryGetComponent<DropshipDestinationComponent>(uid, out var comp))
+        {
+            comp.Ship = ship;
+            EntityManager.Dirty(uid, comp);
+        }
+    }
+
+    public void SetDestinationHome(EntityUid uid, bool home)
+    {
+        if (EntityManager.TryGetComponent<DropshipDestinationComponent>(uid, out var comp))
+        {
+            comp.Home = home;
+            EntityManager.Dirty(uid, comp);
+        }
+    }
+
+    public void SetDropshipDestination(EntityUid uid, EntityUid? destination)
+    {
+        if (EntityManager.TryGetComponent<DropshipComponent>(uid, out var comp))
+        {
+            comp.Destination = destination;
+            EntityManager.Dirty(uid, comp);
+        }
+    }
 }

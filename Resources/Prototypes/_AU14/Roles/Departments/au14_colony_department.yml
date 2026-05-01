@@ -1,4 +1,7 @@
+<<<<<<< buildsfixed
 
+=======
+>>>>>>> master
 - type: department
   parent: CMDepartmentBase
   id: AU14DepartmentColonyCommand
@@ -8,27 +11,18 @@
   roles:
   - AU14JobCivilianColonyAdministrator
   - AU14JobCivilianColonyAdminAssistant
+<<<<<<< buildsfixed
 
+=======
+  - AU14JobCivilianHeadPhysician
+  - AU14JobCivilianHeadOfService
+  - AU14JobCivilianHeadOfEngineering
+  - AU14JobCivilianForeman
+  - AU14JobLEOLeaderBase
+>>>>>>> master
   departmentRadio: null
   headOfDepartment: AU14JobCivilianColonyAdministrator
   faction: colonist
-
-
-- type: department
-  parent: CMDepartmentBase
-  id: AU14DepartmentLabor
-  name: au14-department-colony-labor
-  description: au14-department-colony-labor-description
-  color: "#e3ce94"
-  roles:
-  - AU14JobCivilianColonist
-
-  departmentRadio: null
-  headOfDepartment: null
-  faction: colonist
-
-
-
 
 - type: department
   parent: CMDepartmentBase
@@ -37,12 +31,36 @@
   description: au14-department-colony-description
   color: "#e3ce94"
   roles:
+  - AU14JobCivilianColonist
   - AU14JobCivilianJournalist
-  - AU14JobCivilianColonySynthetic
   - AU14JobCivilianUSASFRecruiter
+  - AU14JobCivilianColonySynthetic
+  - AU14JobCivilianFoodServiceWorker
+  - AU14JobCivilianShopkeep
+  - AU14JobCivilianWasteManagementSpecialist
   departmentRadio: null
   headOfDepartment: null
   faction: colonist
+
+- type: department
+  parent: CMDepartmentBase
+  id: AU14DepartmentLabor
+  name: au14-department-colony-labor
+  description: au14-department-colony-labor-description
+  color: "#e3ce94"
+  roles:
+<<<<<<< buildsfixed
+  - AU14JobCivilianJournalist
+  - AU14JobCivilianColonySynthetic
+  - AU14JobCivilianUSASFRecruiter
+=======
+  - AU14JobCivilianForeman
+  - AU14JobCivilianColonist
+>>>>>>> master
+  departmentRadio: null
+  headOfDepartment: null
+  faction: colonist
+  editorHidden: true
 
 - type: department
   parent: CMDepartmentBase
@@ -58,61 +76,7 @@
   departmentRadio: null
   headOfDepartment: AU14JobCivilianHeadOfService
   faction: colonist
-
-
-
-- type: department
-  parent: CMDepartmentBase
-  id: AU14DepartmentCriminal
-  name: au14-department-criminal
-  description: au14-department-criminal-description
-  color: "#e3ce94"
-  roles:
-  - AU14JobCivilianPrisoner
-  - AU14JobMobGoon
-  - AU14JobMobBoss
-  departmentRadio: null
-  headOfDepartment: null
-  faction: colonist
-
-
-- type: department
-  parent: CMDepartmentBase
-  id: AU14DepartmentEngineering
-  name: au14-department-colony-engineeringlogistics
-  description: au14-department-colony-engineeringlogistics-description
-  color: "#e3ce94"
-  roles:
-  - AU14JobCivilianHeadOfEngineering
-  - AU14JobCivilianForeman
-  - AU14JobCivilianEngineer
-  - AU14JobCivilianFreightSystemsSpecialist
-
-
-  departmentRadio: null
-  headOfDepartment: AU14JobCivilianCorporateLiaison
-  faction: colonist
-- type: department
-  parent: CMDepartmentBase
-  id: AU14DepartmentCorporate
-  name: au14-department-colony-corporate
-  description: au14-department-colony-corporate-description
-  color: "#e3ce94"
-  roles:
-  - AU14JobCivilianCorporateLiaison
-  - AU14JobWYGuard
-  - AU14JobCivilianScientist
-  - AU14JobCivilianKellandWarden
-  - AU14JobCivilianCorporateAssistant
-  - AU14JobColonyWorkingJoe
-
-
-
-
-  departmentRadio: null
-  headOfDepartment: null
-  faction: colonist
-
+  editorHidden: true
 
 - type: department
   parent: CMDepartmentBase
@@ -130,9 +94,6 @@
   headOfDepartment: AU14JobCivilianHeadPhysician
   faction: colonist
 
-
-
-
 - type: department
   parent: CMDepartmentBase
   id: AU14DepartmentColonySecurity
@@ -146,7 +107,59 @@
   - AU14JobCivilianPaPOfficer
   - AU14JobCivilianCMBMarshal
   - AU14JobCivilianCMBDeputy
+  departmentRadio: null
+  headOfDepartment: null
+  faction: colonist
 
+- type: department
+  parent: CMDepartmentBase
+  id: AU14DepartmentEngineering
+  name: au14-department-colony-engineeringlogistics
+  description: au14-department-colony-engineeringlogistics-description
+  color: "#e3ce94"
+  roles:
+  - AU14JobCivilianHeadOfEngineering
+  - AU14JobCivilianForeman
+  - AU14JobCivilianEngineer
+  - AU14JobCivilianFreightSystemsSpecialist
+  departmentRadio: null
+  headOfDepartment: AU14JobCivilianCorporateLiaison
+  faction: colonist
+
+- type: department
+  parent: CMDepartmentBase
+  id: AU14DepartmentCorporate
+  name: au14-department-colony-corporate
+  description: au14-department-colony-corporate-description
+  color: "#e3ce94"
+  roles:
+  - AU14JobCivilianCorporateLiaison
+  - AU14JobWYGuard
+  - AU14JobCivilianScientist
+  - AU14JobCivilianKellandWarden
+  - AU14JobCivilianCorporateAssistant
+  - AU14JobColonyWorkingJoe
+<<<<<<< buildsfixed
+
+
+
+
+=======
+>>>>>>> master
+  departmentRadio: null
+  headOfDepartment: null
+  faction: colonist
+
+- type: department
+  parent: CMDepartmentBase
+  id: AU14DepartmentCriminal
+  name: au14-department-criminal
+  description: au14-department-criminal-description
+  color: "#e3ce94"
+  roles:
+  - AU14JobCivilianPrisoner
+  - AU14JobMobGoon
+  - AU14JobMobBoss
   departmentRadio: null
   headOfDepartment: null
   faction: colonist

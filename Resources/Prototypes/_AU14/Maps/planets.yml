@@ -31,8 +31,6 @@
     - cultistThreat
     - XenoThreat
     - XenoThreatCF
-    - apethreat
-    - apethreatcf
     - wendigoThreat
     thirdparties:
     - FORECON
@@ -80,7 +78,6 @@
     - USCM
     - WEYU
     - RMC
-    - UNISC
     defaultgovfor: USCM
     defaultopfor: UPP
     govforinship: false
@@ -112,8 +109,6 @@
     threats:
     - cultistThreat
     - XenoThreat
-    - apethreat
-    - apethreatcf
     - wendigoThreat
     # Shepherds' Pride exposes CWPS Ranger as its map-specific LEO role.
     joboverrides:
@@ -223,8 +218,6 @@
     threats:
     - cultistThreat
     - XenoThreat
-    - apethreat
-    - apethreatcf
     - wendigoThreat
     joboverrides:
       AU14JobLEOLeaderBase: AU14JobCivilianCMBMarshal
@@ -289,7 +282,6 @@
     daycycleenabled: true
     threats:
     - XenoThreat
-    - apethreat
     thirdparties:
     - USArmy
     - USArmyAlt
@@ -330,8 +322,6 @@
     threats:
     - XenoThreat
     - XenoThreatCF
-    - apethreat
-    - apethreatcf
     - wendigoThreat
     thirdparties:
     - USArmy
@@ -387,8 +377,6 @@
     - cultistThreat
     - XenoThreat
     - XenoThreatCF
-    - apethreat
-    - apethreatcf
     - wendigoThreat
     thirdparties:
     - FORECON
@@ -475,12 +463,10 @@
     - USCM
     - RMC
     - CMBCIU
-    - HAZOPS
     platoonsOpfor:
     - UPP
     - ProdigySF
     - VAIPO
-    - UNISC
     - LACN
     defaultgovfor: WEYU
     defaultopfor: ProdigySF
@@ -490,8 +476,6 @@
     faction: ua
     thirdparties:
     - ICRCReliefParty
-    - cultistThirdPartyNoQueen
-    - XenoParasiteRunnerParty
     - USArmyTank
     - WYHT
     - IPIE
@@ -500,6 +484,10 @@
     - WYPMCPartyAlt
     - CMBInvestigationParty
     - CMBInvestigationPartyAlt
+    - UPPGROM
+    - ICRCReliefParty
+    - UACGLostTeam
+    - USArmy
     threats:
     - cultistThreatOnMarker
     - XenoThreat
@@ -554,8 +542,6 @@
     threats:
     - cultistThreat
     - XenoThreat
-    - apethreat
-    - apethreatcf
     - wendigoThreat
     jobScalingFof: DefaultGovforOpforScale
     jobScalingIns: DefaultInsurgencyScale
@@ -572,14 +558,14 @@
     camouflage: Desert
     announcement: "A remote research outpost, Shepherd's Pride, has gone silent. The UNS Almayer is dispatched to investigate the mysterious circumstances."
     platoonsOpfor:
-    - LACN
-    - USCM
-    - RMC
-    platoonsGovfor:
     - UPP
     - WEYU
     - VAIPO
     - ProdigySF
+    platoonsGovfor:
+    - LACN
+    - USCM
+    - RMC
     defaultgovfor: UPP
     defaultopfor: RMC
     govforinship: true
@@ -622,8 +608,8 @@
     platoonsGovfor:
     - USCM
     - WEYU
+    - VAIPO
     - RMC
-    - UNISC
     - UPP
     - HAZOPS
     defaultgovfor: USCM
@@ -671,9 +657,9 @@
     - USCM
     - WEYU
     - RMC
-    - UNISC
     - UPP
     - HAZOPS
+    - VAIPO
     defaultgovfor: USCM
     defaultopfor: UPP
     govforinship: true
@@ -718,7 +704,6 @@
     - USCM
     - WEYU
     - VAIPO
-    - UNISC
     - UPP
     - HAZOPS
     defaultgovfor: USCM
@@ -790,7 +775,7 @@
 
 - type: lorePrimer
   id: AU14PrimerPlanetLament
-  planetText: "Date 2181 - Barker's Lament. Salvage and mining colony"
+  planetText: "Date 2181 - Barker's Lament, mining and farming colony on the planet of LV-376 'Ulixes'. Primarily under the control of the United Americas, despite the constant interference of Weyland-Yutani."
 
 - type: lorePrimer
   id: AU14PrimerPlanetSorokyne
@@ -798,7 +783,7 @@
 
 - type: lorePrimer
   id: AU14PrimerPlanetTrijent
-  planetText: "Date 2181 - Raijin Hydroelectric, Three World  Empire facility"
+  planetText: "Date 2182 - LV-670 Raijin Hydroelectric (formerly known as 'Trijent Dam'), a Three World Empire water treatment facility."
 
 - type: lorePrimer
   id: AU14PrimerPlanetShivasSnowball
@@ -807,6 +792,7 @@
 - type: lorePrimer
   id: AU14PrimerPlanetKutjevo
   planetText: "Date 2181 - Kutjevo Biolab. Level 3 facility operated by the Weyland-Yutani Corporation."
+
 - type: lorePrimer
   id: AU14PrimerPlanetFiorina
   planetText: "Date 2181 - Fiorina Prison. Privately owned  and operated by the weyland-yutani corporation, Fiorina 161 is a maximum security prison for the most dangerous criminals in the system."
