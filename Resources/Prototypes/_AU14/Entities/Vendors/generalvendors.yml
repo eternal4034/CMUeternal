@@ -350,7 +350,7 @@
       - id: CMBeltMedicBag
       - id: AU14BeltMedicBagBlack
     - name: Medical Webbing
-      choices: { CMUPlatoonMedicalStorage: 1 }
+      choices: { CMUPlatoonMedicalWebbing: 1 }
       entries:
       - id: CMWebbingSurgicalGreen
     - name: Medical Gloves
