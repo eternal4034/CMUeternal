@@ -602,6 +602,8 @@
     - type: MaterialStorage
       ignoreColor: true
       whitelist:
+        materials:
+          - RawIron
         tags:
           - Ore
     - type: Lathe

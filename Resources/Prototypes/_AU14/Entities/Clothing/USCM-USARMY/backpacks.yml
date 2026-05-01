@@ -6,6 +6,8 @@
   components:
   - type: Sprite
     sprite: _AU14/Clothing/Back/impbag.rsi
+  - type: Item
+    size: Huge
   - type: Storage
     maxItemSize: Huge
     grid:
@@ -20,7 +22,7 @@
   - type: Sprite
     sprite: _AU14/Clothing/Back/corpsmanbag.rsi
   - type: Storage
-    maxItemSize: Huge
+    maxItemSize: Large
     grid:
     - 0,0,22,1
 
@@ -33,7 +35,7 @@
   - type: Sprite
     sprite: _AU14/Clothing/Back/techbag.rsi
   - type: Storage
-    maxItemSize: Huge
+    maxItemSize: Large
     grid:
     - 0,0,25,1
 
@@ -58,7 +60,7 @@
     - state: icon
       map: [ "base" ]
   - type: Storage
-    maxItemSize: Huge
+    maxItemSize: Large
     grid:
     - 0,0,4,1
   - type: CMStorageVisualizer
@@ -98,7 +100,7 @@
     - state: icon
       map: [ "base" ]
   - type: Storage
-    maxItemSize: Huge
+    maxItemSize: Large
     grid:
     - 0,0,4,1
   - type: CMStorageVisualizer
@@ -138,7 +140,7 @@
     - state: icon
       map: [ "base" ]
   - type: Storage
-    maxItemSize: Huge
+    maxItemSize: Large
     grid:
     - 0,0,4,1
   - type: CMStorageVisualizer
@@ -178,7 +180,7 @@
     - state: icon
       map: [ "base" ]
   - type: Storage
-    maxItemSize: Huge
+    maxItemSize: Large
     grid:
     - 0,0,4,1
   - type: CMStorageVisualizer

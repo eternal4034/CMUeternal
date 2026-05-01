@@ -1,4 +1,4 @@
-﻿
+
 - type: department
   parent: CMDepartmentBase
   id: AU14DepartmentColonyCommand
@@ -7,11 +7,6 @@
   color: "#e3ce94"
   roles:
   - AU14JobCivilianColonyAdministrator
-  - AU14JobCivilianForeman
-  - AU14JobLEOLeaderBase
-  - AU14JobCivilianHeadOfEngineering
-  - AU14JobCivilianHeadOfService
-  - AU14JobCivilianHeadPhysician
   - AU14JobCivilianColonyAdminAssistant
 
   departmentRadio: null
@@ -26,7 +21,6 @@
   description: au14-department-colony-labor-description
   color: "#e3ce94"
   roles:
-  - AU14JobCivilianForeman
   - AU14JobCivilianColonist
 
   departmentRadio: null
@@ -43,7 +37,6 @@
   description: au14-department-colony-description
   color: "#e3ce94"
   roles:
-  - AU14JobCivilianForeman
   - AU14JobCivilianJournalist
   - AU14JobCivilianColonySynthetic
   - AU14JobCivilianUSASFRecruiter

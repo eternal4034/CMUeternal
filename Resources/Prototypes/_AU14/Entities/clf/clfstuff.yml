@@ -223,9 +223,9 @@
       amount: 1
     - id: RMCGunCasePistolM44
       amount: 1
-    - id: CMPackFlareBase
+    - id: CMPackFlare
       amount: 3
-    - id: AU14BaseDefibrillator
+    - id: AU14CMDefibrillator
       amount: 1
     - id: RMCRangefinder
       amount: 2
@@ -361,4 +361,5 @@
     - Utility
     startingAccessories:
     - AU14CLFHeadset
+
 
