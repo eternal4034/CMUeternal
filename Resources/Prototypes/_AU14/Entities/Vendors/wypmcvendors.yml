@@ -660,8 +660,6 @@
     sections:
     - name: Apparel
       entries:
-      - id: ArmorHelmetPMCFieldOfficer
-        amount: 1
       - id: ArmorHelmetPMCOfficer
         amount: 1
       - id: RMCHeadCapWestonYamadaDark
