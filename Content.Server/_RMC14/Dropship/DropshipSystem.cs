@@ -3,6 +3,7 @@ using System.Numerics;
 using Content.Server._CMU14.Dropship.TacticalLand;
 using Content.Server._RMC14.Marines;
 using Content.Server.AU14.Round;
+using Content.Server.AU14.ThirdParty;
 using Content.Server.Doors.Systems;
 using Content.Server.GameTicking;
 using Content.Server.Shuttles.Components;
@@ -31,12 +32,14 @@ using Content.Shared.CCVar;
 using Content.Shared.Coordinates;
 using Content.Shared.Database;
 using Content.Shared.Doors.Components;
+using Content.Shared.Interaction;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.Systems;
 using Content.Shared.Timing;
+using Content.Shared.UserInterface;
 using Robust.Server.Audio;
 using Robust.Server.Containers;
 using Robust.Server.GameObjects;
@@ -104,6 +107,7 @@ public sealed class DropshipSystem : SharedDropshipSystem
         SubscribeLocalEvent<DropshipComponent, FTLUpdatedEvent>(OnFTLUpdated);
 
         SubscribeLocalEvent<DropshipInFlyByComponent, FTLCompletedEvent>(OnInFlyByFTLCompleted);
+        SubscribeLocalEvent<ThirdPartyDropshipDeactivatedConsoleComponent, InteractHandEvent>(OnDeactivatedThirdPartyConsoleInteract);
 
         SubscribeLocalEvent<DropshipDestinationComponent, DropshipRelayedEvent<FTLStartedEvent>>(OnDepartureLocationFTLStarted);
         SubscribeLocalEvent<DropshipDestinationComponent, DropshipRelayedEvent<FTLCompletedEvent>>(OnDestinationLocationFTLCompleted);
@@ -340,6 +344,41 @@ public sealed class DropshipSystem : SharedDropshipSystem
             dropship.LastLandingCoordinates = GetNetCoordinates(destXform.Coordinates);
             Dirty(ent.Comp.Ship.Value, dropship);
         }
+
+        if (TryComp(ent.Owner, out ThirdPartyDropshipReturnDestinationComponent? returnDestination))
+            DisableReturnedThirdPartyDropship(args.Relayer, returnDestination);
+    }
+
+    private void DisableReturnedThirdPartyDropship(EntityUid dropship, ThirdPartyDropshipReturnDestinationComponent returnDestination)
+    {
+        if (returnDestination.Shuttle != dropship)
+            return;
+
+        EnsureComp<ThirdPartyDropshipReturnedComponent>(dropship);
+        EnsureComp<PreventFTLComponent>(dropship);
+
+        var children = Transform(dropship).ChildEnumerator;
+        while (children.MoveNext(out var child))
+        {
+            if (!HasComp<DropshipNavigationComputerComponent>(child))
+                continue;
+
+            _ui.CloseUis(child);
+            EnsureComp<ThirdPartyDropshipDeactivatedConsoleComponent>(child);
+            RemCompDeferred<DropshipNavigationComputerComponent>(child);
+            RemCompDeferred<ActivatableUIComponent>(child);
+        }
+
+        RefreshUI();
+    }
+
+    private void OnDeactivatedThirdPartyConsoleInteract(Entity<ThirdPartyDropshipDeactivatedConsoleComponent> ent, ref InteractHandEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        args.Handled = true;
+        _popup.PopupEntity("Shuttle has been deactivated.", ent.Owner, args.User, PopupType.MediumCaution);
     }
 
 
@@ -419,6 +458,24 @@ public sealed class DropshipSystem : SharedDropshipSystem
         if (!TryComp(dropshipId, out ShuttleComponent? shuttleComp))
         {
             Log.Warning($"Tried to launch {ToPrettyString(computer)} outside of a shuttle.");
+            return false;
+        }
+
+        if (HasComp<ThirdPartyDropshipReturnedComponent>(dropshipId.Value))
+        {
+            if (user != null)
+                _popup.PopupEntity("This dropship has returned to deep space and can no longer be routed.", computer.Owner, user.Value, PopupType.MediumCaution);
+
+            return false;
+        }
+
+        if (TryComp(destination, out ThirdPartyDropshipReturnDestinationComponent? returnDestination) &&
+            returnDestination.Shuttle != dropshipId.Value)
+        {
+            if (user != null)
+                _popup.PopupEntity("That return vector is not assigned to this dropship.", computer.Owner, user.Value, PopupType.MediumCaution);
+
+            Log.Warning($"{ToPrettyString(user)} tried to launch {ToPrettyString(dropshipId.Value)} to another third party dropship return destination {ToPrettyString(destination)}");
             return false;
         }
 
@@ -661,6 +718,12 @@ public sealed class DropshipSystem : SharedDropshipSystem
             {
                 if (HasComp<Content.Shared._CMU14.Dropship.TacticalLand.EphemeralDropshipDestinationComponent>(uid))
                     continue;
+
+                if (TryComp(uid, out ThirdPartyDropshipReturnDestinationComponent? returnDestination) &&
+                    returnDestination.Shuttle != grid)
+                {
+                    continue;
+                }
 
                 if (IsStrictThirdPartyFaction(whitelistedFaction))
                 {

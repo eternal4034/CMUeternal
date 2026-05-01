@@ -124,6 +124,20 @@ public sealed class AuThirdPartySystem : EntitySystem
             }
             _sawmill.Debug($"[AuThirdPartySystem] Dropship grid initialized: {mainGridUid}");
 
+            var dropshipMapCoordinates = _transform.ToMapCoordinates(
+                _entityManager.GetComponent<TransformComponent>(mainGridUid).Coordinates);
+            var returnDestination = _entityManager.SpawnEntity(
+                "CMDropshipDestinationThirdPartyReturn",
+                dropshipMapCoordinates);
+            var returnDestinationComp = EnsureComp<ThirdPartyDropshipReturnDestinationComponent>(returnDestination);
+            returnDestinationComp.Shuttle = mainGridUid;
+
+            EnsureComp<DropshipDestinationComponent>(returnDestination);
+            _sharedDropshipSystem.SetDestinationShip(returnDestination, mainGridUid);
+            _sharedDropshipSystem.SetDestinationHome(returnDestination, true);
+
+            EnsureComp<DropshipComponent>(mainGridUid);
+            _sharedDropshipSystem.SetDropshipDestination(mainGridUid, returnDestination);
 
             var navQuery = _entityManager.EntityQueryEnumerator<DropshipNavigationComputerComponent, TransformComponent>();
             EntityUid? navUid = null;
