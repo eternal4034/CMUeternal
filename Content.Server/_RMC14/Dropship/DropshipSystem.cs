@@ -103,7 +103,6 @@ public sealed class DropshipSystem : SharedDropshipSystem
         _doorBoltQuery = GetEntityQuery<DoorBoltComponent>();
 
         SubscribeLocalEvent<DropshipNavigationComputerComponent, DropshipLockoutDoAfterEvent>(OnNavigationLockout);
-        SubscribeLocalEvent<DropshipNavigationComputerComponent, AfterActivatableUIOpenEvent>(OnThirdPartyNavigationOpen);
 
         SubscribeLocalEvent<DropshipComponent, FTLRequestEvent>(OnFtlRequested);
         SubscribeLocalEvent<DropshipComponent, FTLStartedEvent>(OnFTLStarted);
@@ -316,7 +315,7 @@ public sealed class DropshipSystem : SharedDropshipSystem
         RefreshUI();
     }
 
-    private void OnThirdPartyNavigationOpen(Entity<DropshipNavigationComputerComponent> ent, ref AfterActivatableUIOpenEvent args)
+    protected override void AfterNavigationOpen(Entity<DropshipNavigationComputerComponent> ent, ref AfterActivatableUIOpenEvent args)
     {
         if (_transform.GetGrid(ent.Owner) is not { } grid)
             return;
