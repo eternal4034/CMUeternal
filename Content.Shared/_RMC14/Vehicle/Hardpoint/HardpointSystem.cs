@@ -120,7 +120,7 @@ public sealed partial class HardpointSystem : EntitySystem
         RefreshVehicleMechanicalFailureModifiers(ent.Owner);
 
         RefreshCanRun(ent.Owner);
-        UpdateHardpointUi(ent.Owner, ent.Comp);
+        UpdateHardpointUi(ent.Owner, ent.Comp, state: state);
         UpdateContainingVehicleUi(ent.Owner);
         RaiseHardpointSlotsChanged(ent.Owner);
         RaiseVehicleSlotsChanged(ent.Owner);
@@ -1548,6 +1548,15 @@ public sealed partial class HardpointSystem : EntitySystem
     {
         var current = ent.Comp.Integrity;
         var max = ent.Comp.MaxIntegrity;
+        if (TryComp(ent.Owner, out VehicleComponent? _) &&
+            TryComp(ent.Owner, out HardpointSlotsComponent? slots) &&
+            TryComp(ent.Owner, out ItemSlotsComponent? itemSlots) &&
+            TryGetVehicleEffectiveIntegrity(ent.Owner, ent.Comp, slots, itemSlots, out var effectiveCurrent, out var effectiveMax))
+        {
+            current = effectiveCurrent;
+            max = effectiveMax;
+        }
+
         var percent = max > 0f ? current / max : 0f;
 
         if (HasComp<XenoComponent>(args.Examiner))
@@ -1640,6 +1649,66 @@ public sealed partial class HardpointSystem : EntitySystem
         }
 
         return true;
+    }
+
+    private bool TryGetVehicleEffectiveIntegrity(
+        EntityUid vehicle,
+        HardpointIntegrityComponent frame,
+        HardpointSlotsComponent slots,
+        ItemSlotsComponent itemSlots,
+        out float current,
+        out float max)
+    {
+        current = frame.Integrity;
+        max = frame.MaxIntegrity;
+        var maxTopLevelCurrent = 0f;
+        var maxTopLevelMax = 0f;
+        var intactTopLevelHardpoints = 0;
+
+        foreach (var slot in slots.Slots)
+        {
+            if (string.IsNullOrWhiteSpace(slot.Id))
+                continue;
+
+            if (!_itemSlots.TryGetSlot(vehicle, slot.Id, out var itemSlot, itemSlots) ||
+                itemSlot.Item is not { } item ||
+                !TryComp(item, out HardpointIntegrityComponent? integrity))
+            {
+                continue;
+            }
+
+            if (integrity.Integrity > 0f)
+            {
+                intactTopLevelHardpoints++;
+                maxTopLevelCurrent = MathF.Max(maxTopLevelCurrent, integrity.Integrity);
+            }
+
+            maxTopLevelMax = MathF.Max(maxTopLevelMax, integrity.MaxIntegrity);
+        }
+
+        if (maxTopLevelMax <= 0f)
+            return false;
+
+        var hullFraction = intactTopLevelHardpoints > 0 ? slots.FrameDamageFractionWhileIntact : 1f;
+        current = GetVehicleEffectiveIntegrity(frame.Integrity, maxTopLevelCurrent, hullFraction);
+        max = GetVehicleEffectiveIntegrity(frame.MaxIntegrity, maxTopLevelMax, slots.FrameDamageFractionWhileIntact);
+        return true;
+    }
+
+    private static float GetVehicleEffectiveIntegrity(float frameIntegrity, float topLevelHardpointIntegrity, float hullFraction)
+    {
+        frameIntegrity = MathF.Max(0f, frameIntegrity);
+        topLevelHardpointIntegrity = MathF.Max(0f, topLevelHardpointIntegrity);
+        hullFraction = Math.Clamp(hullFraction, 0f, 1f);
+
+        if (topLevelHardpointIntegrity <= 0f)
+            return frameIntegrity;
+
+        var protectedHullRemaining = frameIntegrity - topLevelHardpointIntegrity * hullFraction;
+        if (protectedHullRemaining <= 0f)
+            return topLevelHardpointIntegrity;
+
+        return topLevelHardpointIntegrity + protectedHullRemaining;
     }
 
     private static void ApplyDamageModifierCoefficients(
@@ -1987,6 +2056,9 @@ public sealed partial class HardpointSystem : EntitySystem
             _lock.RefreshForcedOpen(ent.Owner);
 
         RefreshGunModifiers(ent.Owner);
+
+        if (isFrame)
+            _lock.RefreshForcedOpen(ent.Owner);
 
         if (ent.Comp.RepairSound != null)
             _audio.PlayPredicted(ent.Comp.RepairSound, ent.Owner, args.User);

@@ -177,6 +177,7 @@
   - type: Body
     prototype: Xenonid
   - type: Xeno
+  - type: VehicleDamageMultiplier
   - type: XenoRegen
   - type: XenoStateVisuals
   - type: UserInterface
