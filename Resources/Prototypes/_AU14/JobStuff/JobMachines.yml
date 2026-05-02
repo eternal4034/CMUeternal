@@ -38,8 +38,9 @@
 - type: entity
   parent: BaseStructure
   id: AUSubmissionPointBase
-  name: Submission Point
+  name: submission point
   description: A place to submit  resources for shipping.
+  suffix: Any
   components:
   - type: Sprite
     sprite: _AU14/Structures/colony_processor.rsi
@@ -54,62 +55,93 @@
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
   - type: InteractionOutline
+  - type: ThrowInsertContainer
+    containerId: submission
+    probabilty: 100
   - type: SubmissionStorage
-
+    rewards:
+      SteelOre: 100
+      AUwood: 25
+      Vegetable: 10
+      Fruit: 20
+      CottonBoll: 15
+      CMUGrain: 15
+  - type: ContainerContainer
+    containers:
+      submission: !type:Container
+  - type: DisposalUnit
+    containerId: submission
+    whitelist:
+      tags:
+      - SteelOre
+      - AUwood
+      - Vegetable
+      - Fruit
+      - CottonBoll
+      - CMUGrain
+    
 - type: entity
   parent: AUSubmissionPointBase
   id: AUSubmissionPointSteel
-  name: Submission Point (steel)
+  name: submission point (steel)
+  suffix: Steel
   description: A place to submit  resources for shipping.
   components:
-  - type: ItemSlots
-    slots:
-      ItemCabinet:
-        whitelist:
-          tags:
-          - SteelOre
-
-
+  - type: SubmissionStorage
+    rewards:
+      SteelOre: 100
+  - type: DisposalUnit
+    containerId: submission
+    whitelist:
+      tags:
+      - SteelOre
 
 - type: entity
   parent: AUSubmissionPointBase
   id: AUSubmissionPointWood
-  name: Submission Point (wood)
+  name: submission point (wood)
+  suffix: Wood
   description: A place to submit  resources for shipping.
   components:
-  - type: ItemSlots
-    slots:
-      ItemCabinet:
-        whitelist:
-          tags:
-          - AUwood
-
+  - type: SubmissionStorage
+    rewards:
+      AUwood: 25
+  - type: DisposalUnit
+    containerId: submission
+    whitelist:
+      tags:
+      - AUwood
 
 - type: entity
   parent: AUSubmissionPointBase
   id: AUSubmissionPointVegetables
-  name: Submission Point (Vegetables)
+  name: submission Point (vegetables)
   description: A place to submit  resources for shipping.
+  suffix: Vegetables
   components:
-  - type: ItemSlots
-    slots:
-      ItemCabinet:
-        whitelist:
-          tags:
-          - Vegetable
+  - type: SubmissionStorage
+    rewards:
+      Vegetable: 10
+  - type: DisposalUnit
+    containerId: submission
+    whitelist:
+      tags:
+      - Vegetable
 
 - type: entity
   parent: AUSubmissionPointBase
   id: AUSubmissionPointFruit
-  name: Submission Point (Fruit)
+  name: submission point (fruit)
   description: A place to submit  resources for shipping.
   components:
-  - type: ItemSlots
-    slots:
-      ItemCabinet:
-        whitelist:
-          tags:
-          - Fruit
+  - type: SubmissionStorage
+    rewards:
+      Fruit: 20
+  - type: DisposalUnit
+    containerId: submission
+    whitelist:
+      tags:
+      - Fruit
 
 - type: Tag
   id: SteelOre
