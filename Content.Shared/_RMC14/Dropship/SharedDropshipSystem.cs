@@ -332,6 +332,11 @@ public abstract class SharedDropshipSystem : EntitySystem
     private void OnNavigationOpen(Entity<DropshipNavigationComputerComponent> ent, ref AfterActivatableUIOpenEvent args)
     {
         RefreshUI(ent);
+        AfterNavigationOpen(ent, ref args);
+    }
+
+    protected virtual void AfterNavigationOpen(Entity<DropshipNavigationComputerComponent> ent, ref AfterActivatableUIOpenEvent args)
+    {
     }
 
     private void OnNavigationLockoutOverride(Entity<DropshipNavigationComputerComponent> ent, ref DropshipLockoutOverrideDoAfterEvent args)
