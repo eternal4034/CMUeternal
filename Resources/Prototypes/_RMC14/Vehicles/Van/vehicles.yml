@@ -12,12 +12,14 @@
     acceleration: 5
     deceleration: 12
     pushCooldown: 2
-    xenoBlockMinimumSize: Immobile
+    xenoBlockMinimumSize: Xeno
     xenoPushMinimumSize: Immobile
     canSmashWalls: true
     wallSmashMinSpeed: 5
     wallSmashWheelDamage: 3
     wallSmashHullDamage: 150
+    wallSmashSlowdownMultiplier: 0.6
+    wallSmashSlowdownDuration: 0.35
     mobCollisionHullDamage: 20
     speedAtZeroIntegrity: 0
     crashImmobileDuration: 90
@@ -202,12 +204,14 @@
     acceleration: 5
     deceleration: 12
     pushCooldown: 2
-    xenoBlockMinimumSize: Immobile
+    xenoBlockMinimumSize: Xeno
     xenoPushMinimumSize: Immobile
     canSmashWalls: true
     wallSmashMinSpeed: 5
     wallSmashWheelDamage: 3
     wallSmashHullDamage: 150
+    wallSmashSlowdownMultiplier: 0.6
+    wallSmashSlowdownDuration: 0.35
     mobCollisionHullDamage: 20
     speedAtZeroIntegrity: 0
     crashImmobileDuration: 90
