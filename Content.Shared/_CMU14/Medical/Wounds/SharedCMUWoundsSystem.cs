@@ -5,11 +5,13 @@ using Content.Shared._CMU14.Medical.BodyPart;
 using Content.Shared._CMU14.Medical.BodyPart.Events;
 using Content.Shared._CMU14.Medical.Bones;
 using Content.Shared._CMU14.Medical.Bones.Events;
+using Content.Shared._CMU14.Medical.Items;
 using Content.Shared._CMU14.Medical.Organs;
 using Content.Shared._CMU14.Medical.Organs.Events;
 using Content.Shared._CMU14.Medical.Wounds.Events;
 using Content.Shared._RMC14.Medical.Unrevivable;
 using Content.Shared._RMC14.Medical.Wounds;
+using Content.Shared._RMC14.Synth;
 using Content.Shared.Body.Organ;
 using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
@@ -53,10 +55,16 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
     public const float WoundThreshold = 5f;
 
     /// <summary>
-    ///     Single-hit Brute threshold above which a blunt also spawns an
-    ///     internal bleed in the part.
+    ///     Single-hit Blunt threshold above which crushing trauma also spawns
+    ///     an internal bleed in the part.
     /// </summary>
-    public const float SevereBluntInternalBleed = 40f;
+    public const float SevereBluntInternalBleed = 60f;
+
+    /// <summary>
+    ///     Splints stabilize catastrophic fractures but cannot fully control
+    ///     the internal bleeding from a shattered bone.
+    /// </summary>
+    public const float SplintedComminutedInternalBleedMultiplier = 0.5f;
 
     /// <summary>
     ///     Untreated wounds do not progress; only <c>Treated = true</c>
@@ -79,6 +87,9 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
             after: new[] { typeof(SharedBoneSystem), typeof(SharedOrganHealthSystem) });
 
         SubscribeLocalEvent<FractureComponent, BoneFracturedEvent>(OnBoneFractured);
+        SubscribeLocalEvent<CMUSplintedComponent, ComponentStartup>(OnSplintStartup);
+        SubscribeLocalEvent<CMUSplintedComponent, ComponentRemove>(OnSplintRemove);
+        SubscribeLocalEvent<CMUSplintChangedEvent>(OnSplintChanged);
         SubscribeLocalEvent<OrganHealthComponent, OrganStageChangedEvent>(OnOrganStageChanged);
 
         Cfg.OnValueChanged(CMUMedicalCCVars.Enabled, v => _medicalEnabled = v, true);
@@ -100,6 +111,10 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
         if (!HasComp<CMUHumanMedicalComponent>(args.Body))
             return;
 
+        // Synths repair via welder/cable, not bandages or surgical line.
+        if (HasComp<SynthComponent>(args.Body))
+            return;
+
         var brute = GroupSum(args.Delta, BruteGroup);
         var burn = GroupSum(args.Delta, BurnGroup);
         var bruteOrBurn = brute + burn;
@@ -116,21 +131,20 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
         var bleedScale = WoundSizeProfile.BleedMultiplier(size);
         var bloodloss = type == WoundType.Brute ? ComputeBleedAmount(brute) * bleedScale : 0f;
 
-        partWound.Wounds.Add(new Wound(
+        AddOrMergeWound(partWound, new Wound(
             bruteOrBurn,
             FixedPoint2.Zero,
             bloodloss,
             stopBleedAt,
             type,
-            false));
-        partWound.Sizes.Add(size);
-        partWound.Bandages.Add(0);
+            false), size);
         Dirty(ent.Owner, partWound);
 
-        // No-op when a Compound+ fracture or other source already drives a
+        // No-op when a catastrophic fracture or other source already drives a
         // higher rate (recompute picks the max).
-        if (brute >= (FixedPoint2)SevereBluntInternalBleed)
-            SeedInternalBleed(ent.Owner, "blunt", 0.5f);
+        var blunt = GetTypeAmount(args.Delta, "Blunt");
+        if (blunt >= SevereBluntInternalBleed)
+            SeedInternalBleed(ent.Owner, "blunt", 0.3f);
 
         if (type == WoundType.Burn
             && burn >= _escharBurnThreshold
@@ -149,6 +163,23 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
         RecomputeInternalBleed(ent.Owner);
     }
 
+    private void OnSplintStartup(Entity<CMUSplintedComponent> ent, ref ComponentStartup args)
+    {
+        RaiseLocalEvent(new CMUSplintChangedEvent(ent.Owner, false));
+    }
+
+    private void OnSplintRemove(Entity<CMUSplintedComponent> ent, ref ComponentRemove args)
+    {
+        RaiseLocalEvent(new CMUSplintChangedEvent(ent.Owner, true));
+    }
+
+    private void OnSplintChanged(CMUSplintChangedEvent args)
+    {
+        if (!IsEnabled())
+            return;
+        RecomputeInternalBleed(args.Part, ignoreSplint: args.Removed);
+    }
+
     private void OnOrganStageChanged(Entity<OrganHealthComponent> ent, ref OrganStageChangedEvent args)
     {
         if (!IsEnabled())
@@ -163,15 +194,22 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
     ///     it's a one-shot spawn in <see cref="OnBodyPartDamaged"/> that
     ///     persists until a higher source overrides or it's cleared.
     /// </summary>
-    public void RecomputeInternalBleed(EntityUid part)
+    public void RecomputeInternalBleed(EntityUid part, bool ignoreSplint = false)
     {
+        if (IsSynthOwned(part))
+        {
+            if (HasComp<InternalBleedingComponent>(part))
+                RemComp<InternalBleedingComponent>(part);
+            return;
+        }
+
         var maxRate = 0f;
         var source = string.Empty;
 
         if (TryComp<FractureComponent>(part, out var f))
         {
             var profile = FractureProfile.Get(f.Severity);
-            var rate = (float)profile.BloodlossPerSecond;
+            var rate = GetSplintAdjustedFractureBleedRate(part, f, (float)profile.BloodlossPerSecond, ignoreSplint);
             if (rate > maxRate)
             {
                 maxRate = rate;
@@ -221,8 +259,25 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
         Dirty(part, ib);
     }
 
+    private float GetSplintAdjustedFractureBleedRate(
+        EntityUid part,
+        FractureComponent fracture,
+        float rate,
+        bool ignoreSplint)
+    {
+        if (rate <= 0f || ignoreSplint || !HasComp<CMUSplintedComponent>(part))
+            return rate;
+
+        return fracture.Severity == FractureSeverity.Comminuted
+            ? rate * SplintedComminutedInternalBleedMultiplier
+            : 0f;
+    }
+
     public void SeedInternalBleed(EntityUid part, string source, float rate)
     {
+        if (IsSynthOwned(part))
+            return;
+
         if (TryComp<InternalBleedingComponent>(part, out var existing) && existing.BloodlossPerSecond >= rate)
             return;
 
@@ -446,7 +501,7 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
 
     /// <summary>
     ///     Server-only side-effect hook; shared no-ops so prediction
-    ///     rollback can't double-apply bloodloss.
+    ///     rollback can't double-drain blood volume.
     /// </summary>
     protected virtual void ApplyInternalBleed(EntityUid body, EntityUid part, float amount)
     {
@@ -465,6 +520,13 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
         if (TryComp<BodyPartComponent>(part, out var partComp) && partComp.Body is { } body)
             return body;
         return null;
+    }
+
+    private bool IsSynthOwned(EntityUid part)
+    {
+        if (HasComp<SynthComponent>(part))
+            return true;
+        return TryGetBodyOwner(part) is { } body && HasComp<SynthComponent>(body);
     }
 
     public EntityUid? TryGetContainingPart(EntityUid organ)
@@ -537,6 +599,68 @@ public abstract class SharedCMUWoundsSystem : EntitySystem
 
         if (comp.Bandages.Count > comp.Wounds.Count)
             comp.Bandages.RemoveRange(comp.Wounds.Count, comp.Bandages.Count - comp.Wounds.Count);
+    }
+
+    private static void AddOrMergeWound(BodyPartWoundComponent comp, Wound wound, WoundSize size)
+    {
+        EnsureBandageSlots(comp);
+
+        var index = FindMergeTarget(comp, wound.Type);
+        if (index < 0)
+        {
+            comp.Wounds.Add(wound);
+            comp.Sizes.Add(size);
+            comp.Bandages.Add(0);
+            return;
+        }
+
+        var existing = comp.Wounds[index];
+        var merged = existing with
+        {
+            Damage = existing.Damage + wound.Damage,
+            Bloodloss = existing.Bloodloss + wound.Bloodloss,
+            StopBleedAt = MaxTime(existing.StopBleedAt, wound.StopBleedAt),
+            Treated = false,
+        };
+
+        comp.Wounds[index] = merged;
+        while (comp.Sizes.Count <= index)
+            comp.Sizes.Add(WoundSize.Deep);
+
+        var mergedSize = WoundSizeProfile.FromDamage(merged.Damage.Float());
+        comp.Sizes[index] = mergedSize;
+
+        var required = WoundSizeProfile.BandagesRequired(mergedSize);
+        comp.Bandages[index] = Math.Min(comp.Bandages[index], Math.Max(0, required - 1));
+    }
+
+    private static int FindMergeTarget(BodyPartWoundComponent comp, WoundType type)
+    {
+        var index = -1;
+        var worst = FixedPoint2.Zero;
+        for (var i = 0; i < comp.Wounds.Count; i++)
+        {
+            var wound = comp.Wounds[i];
+            if (wound.Treated || wound.Type != type)
+                continue;
+
+            if (index >= 0 && wound.Damage <= worst)
+                continue;
+
+            index = i;
+            worst = wound.Damage;
+        }
+
+        return index;
+    }
+
+    private static TimeSpan? MaxTime(TimeSpan? a, TimeSpan? b)
+    {
+        if (a is null)
+            return b;
+        if (b is null)
+            return a;
+        return a > b ? a : b;
     }
 
     private static void RemoveWoundAt(BodyPartWoundComponent comp, int index)

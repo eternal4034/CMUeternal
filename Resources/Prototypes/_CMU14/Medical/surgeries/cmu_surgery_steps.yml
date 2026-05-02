@@ -107,7 +107,7 @@
   name: Clamp internal bleed
   components:
   - type: CMSurgeryStep
-    skill: 2
+    skill: 1
     tool:
     - type: CMHemostat
     remove:
@@ -376,7 +376,6 @@
     minStage: Bruised
   - type: CMUSurgeryStepRepairOrganEffect
     organSlot: liver
-    healAmount: 25
   - type: Sprite
     sprite: _RMC14/Objects/Medical/Surgery/hemostat.rsi
     state: hemostat
@@ -395,7 +394,6 @@
     minStage: Bruised
   - type: CMUSurgeryStepRepairOrganEffect
     organSlot: lungs
-    healAmount: 25
   - type: Sprite
     sprite: _RMC14/Objects/Medical/Surgery/hemostat.rsi
     state: hemostat
@@ -414,7 +412,6 @@
     minStage: Bruised
   - type: CMUSurgeryStepRepairOrganEffect
     organSlot: kidneys
-    healAmount: 25
   - type: Sprite
     sprite: _RMC14/Objects/Medical/Surgery/hemostat.rsi
     state: hemostat
@@ -433,7 +430,24 @@
     minStage: Bruised
   - type: CMUSurgeryStepRepairOrganEffect
     organSlot: heart
-    healAmount: 25
+  - type: Sprite
+    sprite: _RMC14/Objects/Medical/Surgery/hemostat.rsi
+    state: hemostat
+
+- type: entity
+  parent: CMSurgeryStepBase
+  id: CMUSurgeryStepSutureStomach
+  name: Suture stomach
+  components:
+  - type: CMSurgeryStep
+    skill: 3
+    tool:
+    - type: CMHemostat
+  - type: CMUOrganDamagedSurgeryCondition
+    organSlot: stomach
+    minStage: Bruised
+  - type: CMUSurgeryStepRepairOrganEffect
+    organSlot: stomach
   - type: Sprite
     sprite: _RMC14/Objects/Medical/Surgery/hemostat.rsi
     state: hemostat
@@ -520,7 +534,6 @@
     minStage: Bruised
   - type: CMUSurgeryStepRepairOrganEffect
     organSlot: brain
-    healAmount: 20
   - type: Sprite
     sprite: _RMC14/Objects/Medical/Surgery/hemostat.rsi
     state: hemostat
@@ -539,7 +552,6 @@
     minStage: Bruised
   - type: CMUSurgeryStepRepairOrganEffect
     organSlot: eyes
-    healAmount: 20
   - type: Sprite
     sprite: _RMC14/Objects/Medical/Surgery/hemostat.rsi
     state: hemostat
@@ -558,7 +570,6 @@
     minStage: Bruised
   - type: CMUSurgeryStepRepairOrganEffect
     organSlot: ears
-    healAmount: 20
   - type: Sprite
     sprite: _RMC14/Objects/Medical/Surgery/hemostat.rsi
     state: hemostat

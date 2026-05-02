@@ -65,8 +65,9 @@ public abstract class SharedBodyPartHealthSystem : EntitySystem
             return;
 
         var positive = DamageSpecifier.GetPositive(delta);
-        if (!positive.Empty)
-            ApplyPartDamage(ent, positive);
+        var localizable = ExtractLocalizableDamage(positive);
+        if (!localizable.Empty)
+            ApplyPartDamage(ent, localizable);
 
         var healing = GetHealingInGroup(delta, BruteGroup) + GetHealingInGroup(delta, BurnGroup);
         if (healing > FixedPoint2.Zero)
@@ -85,13 +86,36 @@ public abstract class SharedBodyPartHealthSystem : EntitySystem
         if (resolved.ResolvedPartEntity is not { } partUid)
             return;
 
+        TryApplyPartDamage(ent.Owner, partUid, damage);
+    }
+
+    public bool TryApplyPartDamage(EntityUid body, EntityUid partUid, DamageSpecifier damage, float scale = 1f)
+    {
+        if (!_medicalEnabled || !_bodyPartEnabled)
+            return false;
+
+        if (scale <= 0f)
+            return false;
+
+        var localizable = ExtractLocalizableDamage(DamageSpecifier.GetPositive(damage));
+        if (localizable.Empty)
+            return false;
+
+        if (scale != 1f)
+            localizable *= scale;
+
+        return TryApplyPartDamageToPart(body, partUid, localizable);
+    }
+
+    private bool TryApplyPartDamageToPart(EntityUid body, EntityUid partUid, DamageSpecifier damage)
+    {
         if (!TryComp<BodyPartHealthComponent>(partUid, out var health))
-            return;
+            return false;
 
         var modified = ApplyResistance(damage, health.Resistance);
         var total = (float)modified.GetTotal();
         if (total <= 0)
-            return;
+            return false;
 
         var deduction = FixedPoint2.New(total * _bodyPartDamagePropagation);
 
@@ -100,13 +124,35 @@ public abstract class SharedBodyPartHealthSystem : EntitySystem
 
         var organs = CollectOrgans(partUid);
         var partType = TryComp<BodyPartComponent>(partUid, out var partComp) ? partComp.PartType : BodyPartType.Other;
-        var damaged = new BodyPartDamagedEvent(ent.Owner, partUid, partType, modified, health.Current, organs);
+        var damaged = new BodyPartDamagedEvent(body, partUid, partType, modified, health.Current, organs);
         RaiseLocalEvent(partUid, ref damaged);
 
         if (health.Current <= -health.SeveranceThreshold && !IsSeveranceLocked(partType))
         {
-            var severed = new BodyPartSeveredEvent(ent.Owner, partUid, partType);
+            var severed = new BodyPartSeveredEvent(body, partUid, partType);
             RaiseLocalEvent(partUid, ref severed);
+        }
+
+        return true;
+    }
+
+    private DamageSpecifier ExtractLocalizableDamage(DamageSpecifier damage)
+    {
+        var result = new DamageSpecifier();
+        AddPositiveGroupDamage(result, damage, BruteGroup);
+        AddPositiveGroupDamage(result, damage, BurnGroup);
+        return result;
+    }
+
+    private void AddPositiveGroupDamage(DamageSpecifier dest, DamageSpecifier src, ProtoId<DamageGroupPrototype> groupId)
+    {
+        if (!_prototypes.TryIndex(groupId, out var group))
+            return;
+
+        foreach (var type in group.DamageTypes)
+        {
+            if (src.DamageDict.TryGetValue(type, out var amount) && amount > FixedPoint2.Zero)
+                dest.DamageDict[type] = amount;
         }
     }
 

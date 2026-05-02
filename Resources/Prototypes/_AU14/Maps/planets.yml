@@ -100,6 +100,7 @@
     - CMBInvestigationPartyAlt
     - XenoParasiteRunnerParty
     - ApeThirdParty
+    - CarpInvasiveParty
     - ProfessorVonBandolier
     - IPIE
     - IPIESynth
@@ -463,7 +464,6 @@
     - USCM
     - RMC
     - CMBCIU
-    - HAZOPS
     platoonsOpfor:
     - UPP
     - ProdigySF
@@ -609,6 +609,7 @@
     platoonsGovfor:
     - USCM
     - WEYU
+    - VAIPO
     - RMC
     - UPP
     - HAZOPS
@@ -659,6 +660,7 @@
     - RMC
     - UPP
     - HAZOPS
+    - VAIPO
     defaultgovfor: USCM
     defaultopfor: UPP
     govforinship: true

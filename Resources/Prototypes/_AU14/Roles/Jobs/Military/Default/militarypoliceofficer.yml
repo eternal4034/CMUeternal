@@ -31,7 +31,7 @@
   joinNotifyCrew: false
   supervisors: au14-job-supervisors-govfor
   accessGroups:
-  - AU14GovforCommand
+  - AU14GovforSecurity
   roleWeight: 0.25
   special:
   - !type:AddComponentSpecial
@@ -60,7 +60,6 @@
     id: AU14IDCardGOVFORMilitaryPoliceMan
     ears: RMCM5CameraGear
     ears2: AU14HeadsetSectionLeader
-    jumpsuit: CMJumpsuitMP
 
 - type: entity
   parent: CMSpawnPointJobBase

@@ -284,11 +284,10 @@
 
     Corpsman protocol: select the essential equipment set, storage and limited medications.
   components:
-  - type: AccessReader
-    access: [ [ "AU14AccessGovforMedical" ], [ "AU14AccessOpforMedical" ] ]
   - type: Sprite
     sprite: _RMC14/Structures/Machines/VendingMachines/ColMarTech/medical_gear.rsi
   - type: CMAutomatedVendor
+    jobs: [ AU14JobPlatoonCorpsmanBase, AU14JobGOVFORPlatoonCorpsman, AU14JobOpforPlatoonCorpsman ]
     sections:
     - name: Essential Equipment
       takeAll: CMUEssentialEquipment
@@ -308,13 +307,14 @@
     - name: Medical Storage
       choices: { CMUPlatoonMedicalStorage: 1 }
       entries:
-      - id: CMBeltMedical
       - id: AU14BeltMedicBagBlack
     - name: General Medical Supplies
       entries:
       - id: AU14HemostaticGauzePacket
         amount: 60
       - id: AU14Tourniquet
+        amount: 60
+      - id: CMUSplintItem
         amount: 60
       - id: CMOintment10
         amount: 60
@@ -581,6 +581,8 @@
         amount: 5
     - name: Headgear
       entries:
+      - id: ArmorHelmetPMCFieldOfficer
+        amount: 5
       - id: RMCHeadCapWestonYamadaDark
         amount: 5
       - id: AU14WYPMCBallCap

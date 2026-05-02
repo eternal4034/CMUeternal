@@ -2,7 +2,7 @@
 # - Window header / hint
 # - Armed-step status line
 # - Wrong-tool / wrong-part / no-tool popups
-# - Tool category names (resolver categories from SharedCMUSurgeryV2System)
+# - Tool category names (resolver categories from SharedCMUSurgeryFlowSystem)
 # - Per-step labels for all 19 V1 CMU surgeries
 
 # ---- Window chrome ---------------------------------------------------
@@ -39,8 +39,11 @@ cmu-medical-surgery-part-condition-no-eligible = No surgeries available
 
 cmu-medical-surgery-condition-incision-open = Open incision
 cmu-medical-surgery-condition-ribcage-open = Open ribcage
+cmu-medical-surgery-condition-skull-open = Open skull
+cmu-medical-surgery-condition-bones-open = Open bones
 cmu-medical-surgery-condition-fracture = { $severity } fracture
 cmu-medical-surgery-condition-internal-bleed = Internal bleeding
+cmu-medical-surgery-condition-eschar = Eschar
 cmu-medical-surgery-condition-in-progress = Surgery in progress
 cmu-medical-surgery-condition-missing = Severed
 
@@ -48,11 +51,13 @@ cmu-medical-surgery-condition-missing = Severed
 
 cmu-medical-surgery-category-fracture = Fracture
 cmu-medical-surgery-category-bleed = Internal Bleeding
+cmu-medical-surgery-category-burn = Burns
 cmu-medical-surgery-category-remove_organ = Remove Organ
 cmu-medical-surgery-category-transplant = Transplant Organ
 cmu-medical-surgery-category-suture = Suture Organ
 cmu-medical-surgery-category-head_organ = Head Surgery
 cmu-medical-surgery-category-reattach = Reattach Limb
+cmu-medical-surgery-category-parasite = Parasite Removal
 cmu-medical-surgery-category-close_up = Close Up
 cmu-medical-surgery-category-general = Other
 
@@ -66,6 +71,8 @@ cmu-medical-surgery-examine-part-abandoned = [color=#888888]Open wound — no su
 
 cmu-medical-surgery-step-close-incision-label = Close Incision
 cmu-medical-surgery-step-mend-ribcage-label = Mend Ribcage
+cmu-medical-surgery-step-mend-skull-label = Mend Skull
+cmu-medical-surgery-step-mend-bones-label = Mend Bones
 cmu-medical-surgery-step-close-bones-label = Close Bones
 
 # ---- Armed-step status -----------------------------------------------
@@ -80,8 +87,19 @@ cmu-medical-surgery-armed-expired = The surgery pick timed out.
 cmu-medical-surgery-wrong-part = That isn't the part you armed the surgery on.
 cmu-medical-surgery-wrong-tool = That isn't the right tool for this step.
 cmu-medical-surgery-wrong-tool-damage = You slip with the { $tool }!
+cmu-medical-surgery-improvised-mishap = The improvised { $tool } slips and causes extra trauma.
+cmu-medical-surgery-step-failed = The operation slips and causes trauma.
+cmu-medical-surgery-step-failed-with-tool = The { $tool } slips and causes surgical trauma.
 cmu-medical-surgery-no-tool = You need a surgical tool to perform this step.
+cmu-medical-surgery-missing-skills = You don't know how to perform this step.
 cmu-medical-surgery-wrong-limb = That limb doesn't match any empty slot on the patient.
+cmu-medical-surgery-welder-not-lit = Light the tool first.
+cmu-medical-surgery-patient-not-lying = The patient must be lying down or strapped to a surgery table.
+cmu-medical-surgery-patient-not-controlled = The patient needs anesthesia, strong painkillers, or restraints before surgery.
+cmu-medical-surgery-self-pain-control = Self-surgery requires strong painkillers first.
+cmu-medical-surgery-self-not-secured = Buckle yourself to a chair, bed, or roller before attempting self-surgery.
+cmu-medical-surgery-self-not-allowed = You can't perform that surgery on yourself.
+cmu-medical-surgery-step-pain-interrupted = The patient's pain interrupts the surgical step.
 
 # ---- Tool category names (used in the BUI button + armed line) -------
 
@@ -94,6 +112,7 @@ cmu-medical-surgery-tool-category-bone_setter = Bone Setter
 cmu-medical-surgery-tool-category-bone_gel = Bone Gel
 cmu-medical-surgery-tool-category-bone_graft = Bone Graft
 cmu-medical-surgery-tool-category-organ_clamp = Organ Clamp
+cmu-medical-surgery-tool-category-burn_debridement = Burn Debridement Tool
 
 # ---- Per-step labels -------------------------------------------------
 
@@ -123,4 +142,5 @@ cmu-medical-surgery-step-suture-liver-label = Suture Liver
 cmu-medical-surgery-step-suture-lungs-label = Suture Lungs
 cmu-medical-surgery-step-suture-kidneys-label = Suture Kidneys
 cmu-medical-surgery-step-suture-heart-label = Suture Heart
+cmu-medical-surgery-step-suture-stomach-label = Suture Stomach
 cmu-medical-surgery-step-reattach-limb-label = Reattach Severed Limb
