@@ -4,12 +4,14 @@ using Content.Shared._CMU14.Medical.Items;
 using Content.Shared._RMC14.Medical.Surgery;
 using Content.Shared._RMC14.Medical.Surgery.Steps;
 using Content.Shared._RMC14.Medical.Surgery.Tools;
+using Content.Shared._RMC14.Repairable;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
+using Content.Shared.Item.ItemToggle;
 using Content.Shared.Popups;
 using Robust.Shared.Configuration;
 using Robust.Shared.Network;
@@ -18,7 +20,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Shared._CMU14.Medical.Surgery;
 
-public abstract class SharedCMUSurgeryV2System : EntitySystem
+public abstract class SharedCMUSurgeryFlowSystem : EntitySystem
 {
     [Dependency] protected readonly IConfigurationManager Cfg = default!;
     [Dependency] protected readonly INetManager Net = default!;
@@ -27,6 +29,7 @@ public abstract class SharedCMUSurgeryV2System : EntitySystem
     [Dependency] protected readonly SharedBodySystem Body = default!;
     [Dependency] protected readonly SharedDoAfterSystem DoAfter = default!;
     [Dependency] protected readonly SharedHandsSystem Hands = default!;
+    [Dependency] protected readonly ItemToggleSystem ItemToggle = default!;
     [Dependency] protected readonly SharedPopupSystem Popup = default!;
     [Dependency] protected readonly SharedUserInterfaceSystem UserInterface = default!;
     [Dependency] protected readonly SharedCMSurgerySystem RmcSurgery = default!;
@@ -84,6 +87,9 @@ public abstract class SharedCMUSurgeryV2System : EntitySystem
         // check (right leg slot ↔ right leg part) lives in
         // OnArmedInteractUsing's reattach-surgery branch.
         _toolCategories["severed_limb"] = new[] { typeof(BodyPartComponent) };
+        // Synth surgery tools.
+        _toolCategories["blowtorch"] = new[] { typeof(BlowtorchComponent) };
+        _toolCategories["cable_coil"] = new[] { typeof(RMCCableCoilComponent) };
     }
 
     public override void Update(float frameTime)
@@ -139,6 +145,22 @@ public abstract class SharedCMUSurgeryV2System : EntitySystem
         {
             if (lockComp.Part != targetPart || lockComp.LeafSurgeryId != surgeryId)
                 return null;
+            // Reattach has Part=patient for every slot, so part-equality
+            // alone would let the medic silently switch the in-flight
+            // reattach to a different missing slot. Pin it to the slot the
+            // surgery was started on.
+            if (IsReattachSurgeryId(surgeryId)
+                && (lockComp.TargetPartType != armedType || lockComp.TargetSymmetry != armedSymmetry))
+                return null;
+        }
+
+        if (TryComp<CMUSurgeryArmedStepComponent>(patient, out var existing)
+            && existing.LeafSurgeryId == surgeryId)
+        {
+            existing.Surgeon = surgeon;
+            existing.ArmedAt = Timing.CurTime;
+            Dirty(patient, existing);
+            return existing;
         }
 
         // Resolve via the requirement chain so prereqs (open-incision,
@@ -163,12 +185,14 @@ public abstract class SharedCMUSurgeryV2System : EntitySystem
         return armed;
     }
 
-    public void EnsureSurgeryInFlight(EntityUid patient, EntityUid part, EntityUid surgeon, string leafSurgeryId, string leafDisplayName)
+    public void EnsureSurgeryInFlight(EntityUid patient, EntityUid part, EntityUid surgeon, string leafSurgeryId, string leafDisplayName, BodyPartType targetType = default, BodyPartSymmetry targetSymmetry = default)
     {
         var lockComp = EnsureComp<CMUSurgeryInProgressComponent>(patient);
         var alreadyInFlight = lockComp.LeafSurgeryId == leafSurgeryId && lockComp.Part == part;
         lockComp.Part = part;
         lockComp.LeafSurgeryId = leafSurgeryId;
+        lockComp.TargetPartType = targetType;
+        lockComp.TargetSymmetry = targetSymmetry;
         Dirty(patient, lockComp);
 
         var inFlight = EnsureComp<CMUSurgeryInFlightComponent>(part);
@@ -244,6 +268,13 @@ public abstract class SharedCMUSurgeryV2System : EntitySystem
                 return;
             }
 
+            if (HasComp<BlowtorchComponent>(args.Used) && !ItemToggle.IsActivated(args.Used))
+            {
+                Popup.PopupEntity(Loc.GetString("cmu-medical-surgery-welder-not-lit"), patient, args.User, PopupType.SmallCaution);
+                args.Handled = true;
+                return;
+            }
+
             if (Net.IsServer)
                 StartStepDoAfter(patient, armed, args.User, args.Used);
             args.Handled = true;
@@ -257,9 +288,14 @@ public abstract class SharedCMUSurgeryV2System : EntitySystem
 
     private bool IsReattachOnPatientBody(EntityUid patient, EntityUid? clickTarget, CMUSurgeryArmedStepComponent armed)
     {
-        if (armed.LeafSurgeryId != "CMUSurgeryReattachLimb")
+        if (!IsReattachSurgeryId(armed.LeafSurgeryId))
             return false;
         return clickTarget == patient;
+    }
+
+    public static bool IsReattachSurgeryId(string surgeryId)
+    {
+        return surgeryId == "CMUSurgeryReattachLimb" || surgeryId == "RMCSynthSurgeryReattachLimb";
     }
 
     private void OnArmedInteractHand(Entity<CMUSurgeryArmedStepComponent> ent, ref InteractHandEvent args)
@@ -388,6 +424,45 @@ public abstract class SharedCMUSurgeryV2System : EntitySystem
             // Gating prereq id only when the leaf surgery isn't the one
             // being armed — lets the BUI flag "(via Open Incision)".
             resolvedSurgeryProtoId == surgeryId ? null : resolvedSurgeryProtoId);
+        return true;
+    }
+
+    public bool TryResolveStepAt(string surgeryId, int stepIndex, out CMUResolvedStep resolved)
+    {
+        resolved = default!;
+        if (RmcSurgery.GetSingleton(surgeryId) is not { } surgeryEnt)
+            return false;
+        if (!TryComp<CMSurgeryComponent>(surgeryEnt, out var surgeryComp))
+            return false;
+        if (stepIndex < 0 || stepIndex >= surgeryComp.Steps.Count)
+            return false;
+
+        var stepLabel = string.Empty;
+        string? toolCategory = null;
+
+        if (TryGetMetadata(surgeryId, out var metadata) && stepIndex < metadata.Steps.Count)
+        {
+            var stepMeta = metadata.Steps[stepIndex];
+            stepLabel = stepMeta.Label;
+            toolCategory = stepMeta.ToolCategory;
+        }
+        else
+        {
+            var stepProtoId = surgeryComp.Steps[stepIndex];
+            if (RmcSurgery.GetSingleton(stepProtoId) is { } stepEnt)
+            {
+                stepLabel = MetaData(stepEnt).EntityName;
+                toolCategory = ResolveLegacyStepToolCategory(stepEnt);
+            }
+        }
+
+        resolved = new CMUResolvedStep(
+            surgeryId,
+            stepIndex,
+            stepLabel,
+            toolCategory,
+            surgeryComp.Steps.Count,
+            null);
         return true;
     }
 
@@ -523,6 +598,8 @@ public abstract class SharedCMUSurgeryV2System : EntitySystem
             var partDisplay = string.Empty;
             if (TryComp<BodyPartComponent>(lockComp.Part, out var partComp))
                 partDisplay = FormatPartName(partComp.PartType, partComp.Symmetry);
+            else if (lockComp.TargetPartType != default)
+                partDisplay = FormatPartName(lockComp.TargetPartType, lockComp.TargetSymmetry);
             inFlight = new CMUSurgeryInFlightInfo(
                 GetNetEntity(lockComp.Part),
                 partDisplay,

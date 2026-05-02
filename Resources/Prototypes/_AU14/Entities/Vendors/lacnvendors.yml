@@ -293,15 +293,10 @@
 
     Corpsman protocol: select the essential equipment set, storage and limited medications.
   components:
-  - type: AccessReader
-    access: [ [ "AU14AccessGovforMedical" ], [ "AU14AccessOpforMedical" ] ]
   - type: Sprite
     sprite: _RMC14/Structures/Machines/VendingMachines/ColMarTech/medical_equipment.rsi
   - type: CMAutomatedVendor
-    jobs:
-    - AU14JobGOVFORPlatoonCorpsman
-    - AU14JobPlatoonCorpsmanBase
-    - AU14JobOpforPlatoonCorpsman
+    jobs: [ AU14JobPlatoonCorpsmanBase, AU14JobGOVFORPlatoonCorpsman, AU14JobOpforPlatoonCorpsman ]
     sections:
     - name: Essential Equipment
       takeAll: CMUEssentialEquipment
@@ -363,8 +358,22 @@
         amount: 20
       - id: RMCPillCanisterIron
         amount: 20
-    #      - id: CMPillCanisterPeridaxon
-    #      - id: CMPillCanisterTramadol
+      - id: AU14PillCanisterParacetamol
+        amount: 20
+      - id: AU14PillCanisterTramadol
+        amount: 20
+      - id: AU14PillCanisterOxycodone
+        amount: 20
+      - id: AU14PillCanisterCardiocaine
+        amount: 20
+      - id: AU14PillCanisterHepatocytin
+        amount: 20
+      - id: AU14PillCanisterNephronate
+        amount: 20
+      - id: AU14PillCanisterOsteoCalc
+        amount: 20
+      - id: AU14PillCanisterPulmovine
+        amount: 20
     - name: Injectors
       entries:
       - id: CMEpinephrineAutoInjector

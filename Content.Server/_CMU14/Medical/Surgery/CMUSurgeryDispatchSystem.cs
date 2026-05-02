@@ -10,11 +10,13 @@ using Content.Shared._RMC14.Medical.Surgery;
 using Content.Shared._RMC14.Medical.Surgery.Conditions;
 using Content.Shared._RMC14.Medical.Surgery.Steps.Parts;
 using Content.Shared._RMC14.Medical.Surgery.Tools;
+using Content.Shared._RMC14.Synth;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
+using Content.Shared.Prototypes;
 using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
 using Robust.Shared.Containers;
@@ -31,7 +33,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly CMSurgerySystem _rmcSurgery = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
-    [Dependency] private readonly SharedCMUSurgeryV2System _v2Surgery = default!;
+    [Dependency] private readonly SharedCMUSurgeryFlowSystem _flowSurgery = default!;
 
     public override void Initialize()
     {
@@ -58,7 +60,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
                 continue;
             var parts = BuildPartEntries(patient, medic);
             var armed = CompOrNull<CMUSurgeryArmedStepComponent>(patient);
-            var state = _v2Surgery.BuildBuiState(patient, Name(patient), parts, armed);
+            var state = _flowSurgery.BuildBuiState(patient, Name(patient), parts, armed);
             _ui.SetUiState(medic, CMUSurgeryUIKey.Key, state);
         }
     }
@@ -84,7 +86,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
         Dirty(surgeon, marker);
 
         var armed = CompOrNull<CMUSurgeryArmedStepComponent>(patient);
-        var state = _v2Surgery.BuildBuiState(patient, Name(patient), parts, armed);
+        var state = _flowSurgery.BuildBuiState(patient, Name(patient), parts, armed);
 
         _ui.SetUiState(surgeon, CMUSurgeryUIKey.Key, state);
         _ui.OpenUi(surgeon, CMUSurgeryUIKey.Key, surgeon);
@@ -106,7 +108,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
 
             var eligible = BuildEligibleSurgeries(patient, childComp.PartType, childComp.Symmetry, surgeon, childId);
 
-            var displayName = SharedCMUSurgeryV2System.FormatPartName(childComp.PartType, childComp.Symmetry);
+            var displayName = SharedCMUSurgeryFlowSystem.FormatPartName(childComp.PartType, childComp.Symmetry);
             var conditionSummary = BuildConditionSummary(childId);
             var isInFlightHere = lockComp is not null && lockComp.Part == childId;
             var lockedByOtherPart = lockComp is not null && lockComp.Part != childId;
@@ -140,10 +142,18 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
                 if (attachedSlots.Contains((slot.Type, symmetry)))
                     continue;
 
-                var displayName = SharedCMUSurgeryV2System.FormatPartName(slot.Type, symmetry);
+                var displayName = SharedCMUSurgeryFlowSystem.FormatPartName(slot.Type, symmetry);
                 var conditionSummary = Loc.GetString("cmu-medical-surgery-condition-missing");
                 var eligible = BuildEligibleSurgeries(patient, slot.Type, symmetry, surgeon, null);
-                var lockedByOtherPart = lockComp is not null;
+                // Reattach pins lockComp.Part to the patient body but stores
+                // the targeted slot in (TargetPartType, TargetSymmetry) — so
+                // only the matching synthesized slot is "in flight here";
+                // the other missing slot (if any) is locked.
+                var isInFlightHere = lockComp is not null
+                    && SharedCMUSurgeryFlowSystem.IsReattachSurgeryId(lockComp.LeafSurgeryId)
+                    && lockComp.TargetPartType == slot.Type
+                    && lockComp.TargetSymmetry == symmetry;
+                var lockedByOtherPart = lockComp is not null && !isInFlightHere;
 
                 parts.Add(new CMUSurgeryPartEntry(
                     patientNetEntity,
@@ -151,7 +161,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
                     symmetry,
                     displayName,
                     conditionSummary,
-                    false,
+                    isInFlightHere,
                     lockedByOtherPart,
                     eligible));
             }
@@ -177,6 +187,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
             {
                 var severityKey = severity switch
                 {
+                    FractureSeverity.Hairline => "hairline",
                     FractureSeverity.Simple => "simple",
                     FractureSeverity.Compound => "compound",
                     FractureSeverity.Comminuted => "comminuted",
@@ -217,7 +228,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
         // surgery) combo is blocked.
         TryComp<CMUSurgeryInProgressComponent>(patient, out var lockComp);
 
-        foreach (var metadata in _v2Surgery.EnumerateMetadata())
+        foreach (var metadata in _flowSurgery.EnumerateMetadata())
         {
             if (!_prototypes.TryIndex<EntityPrototype>(metadata.Surgery, out var surgeryProto))
                 continue;
@@ -227,8 +238,21 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
 
             if (lockComp is not null)
             {
-                if (lockComp.Part != targetPart || lockComp.LeafSurgeryId != metadata.Surgery)
+                if (lockComp.LeafSurgeryId != metadata.Surgery)
                     continue;
+                // Reattach uses patient body as anchor — match by stored
+                // target slot type/symmetry instead of part-equality so the
+                // synthesized missing-slot entry surfaces the in-flight
+                // reattach's next step.
+                if (SharedCMUSurgeryFlowSystem.IsReattachSurgeryId(metadata.Surgery))
+                {
+                    if (lockComp.TargetPartType != partType || lockComp.TargetSymmetry != symmetry)
+                        continue;
+                }
+                else if (lockComp.Part != targetPart)
+                {
+                    continue;
+                }
             }
 
             if (!IsSurgeryEligible(patient, targetPart, surgeryProto, partType, surgeon))
@@ -236,11 +260,21 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
 
             // Reattach has no part — markers ride on the patient body.
             var resolveTarget = targetPart;
-            if (resolveTarget is null && metadata.Surgery == "CMUSurgeryReattachLimb")
+            if (resolveTarget is null
+                && (metadata.Surgery == "CMUSurgeryReattachLimb" || metadata.Surgery == "RMCSynthSurgeryReattachLimb"))
                 resolveTarget = patient;
 
-            if (!_v2Surgery.TryResolveNextStep(patient, resolveTarget, metadata.Surgery, out var resolved))
+            CMUResolvedStep resolved;
+            if (TryComp<CMUSurgeryArmedStepComponent>(patient, out var armedComp)
+                && armedComp.LeafSurgeryId == metadata.Surgery)
+            {
+                if (!_flowSurgery.TryResolveStepAt(armedComp.SurgeryId, armedComp.StepIndex, out resolved))
+                    continue;
+            }
+            else if (!_flowSurgery.TryResolveNextStep(patient, resolveTarget, metadata.Surgery, out resolved))
+            {
                 continue;
+            }
 
             entries.Add(new CMUSurgeryEntry(
                 metadata.Surgery,
@@ -273,7 +307,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
             return;
         if (!IsSurgeryEligible(patient, part, proto, partType, surgeon))
             return;
-        if (!_v2Surgery.TryResolveNextStep(patient, part, surgeryId, out var resolved))
+        if (!_flowSurgery.TryResolveNextStep(patient, part, surgeryId, out var resolved))
             return;
 
         entries.Add(new CMUSurgeryEntry(
@@ -289,11 +323,18 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
 
     private bool IsSurgeryEligible(EntityUid patient, EntityUid? targetPart, EntityPrototype surgeryProto, BodyPartType partType, EntityUid surgeon)
     {
+        // Hide synth-marked surgeries on non-synth bodies. Synth bodies still
+        // see human surgeries — the per-surgery condition events (eschar,
+        // fracture, larva, etc.) are the source of truth for what's actually
+        // applicable, not a blanket body-type gate.
+        if (!HasComp<SynthComponent>(patient) && surgeryProto.HasComponent<RMCSynthSurgeryComponent>())
+            return false;
+
         // Reattach surfaces ONLY on the synthesized missing-slot entries
         // (targetPart is null). Held-limb match enforcement lives in
         // click-target validation, so dispatch can surface reattach
         // unconditionally on the missing slot.
-        if (surgeryProto.ID == "CMUSurgeryReattachLimb")
+        if (surgeryProto.ID == "CMUSurgeryReattachLimb" || surgeryProto.ID == "RMCSynthSurgeryReattachLimb")
         {
             if (targetPart is not null)
                 return false;
@@ -410,7 +451,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
         marker.TargetSymmetry = armedSymmetry;
         Dirty(medic, marker);
 
-        var armed = _v2Surgery.TryArmStep(medic, marker.Patient, targetPart, args.SurgeryId, args.StepIndex, armedType, armedSymmetry);
+        var armed = _flowSurgery.TryArmStep(medic, marker.Patient, targetPart, args.SurgeryId, args.StepIndex, armedType, armedSymmetry);
         if (armed is null)
             return;
 
@@ -418,7 +459,7 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
         // eligible surgeries (e.g. an open-incision step now removes the
         // prerequisite gate from a fracture-set).
         var parts = BuildPartEntries(marker.Patient, medic);
-        var state = _v2Surgery.BuildBuiState(marker.Patient, Name(marker.Patient), parts, armed);
+        var state = _flowSurgery.BuildBuiState(marker.Patient, Name(marker.Patient), parts, armed);
         _ui.SetUiState(medic, CMUSurgeryUIKey.Key, state);
     }
 
@@ -431,11 +472,11 @@ public sealed class CMUSurgeryDispatchSystem : EntitySystem
         // different surgery can be started. V1 physical-state markers stay
         // — a fresh surgeon sees CMSurgeryCloseIncision /
         // CMSurgeryCloseRibcage as cleanup options.
-        _v2Surgery.ClearArmed(marker.Patient);
-        _v2Surgery.ClearSurgeryInFlight(marker.Patient);
+        _flowSurgery.ClearArmed(marker.Patient);
+        _flowSurgery.ClearSurgeryInFlight(marker.Patient);
 
         var parts = BuildPartEntries(marker.Patient, ent.Owner);
-        var state = _v2Surgery.BuildBuiState(marker.Patient, Name(marker.Patient), parts, null);
+        var state = _flowSurgery.BuildBuiState(marker.Patient, Name(marker.Patient), parts, null);
         _ui.SetUiState(ent.Owner, CMUSurgeryUIKey.Key, state);
     }
 
