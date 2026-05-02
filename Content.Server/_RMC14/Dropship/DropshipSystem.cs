@@ -4,7 +4,6 @@ using Content.Server._CMU14.Dropship.TacticalLand;
 using Content.Server._RMC14.Marines;
 using Content.Server.AU14.Round;
 using Content.Server.AU14.ThirdParty;
-using Content.Server.Chat.Systems;
 using Content.Server.Doors.Systems;
 using Content.Server.GameTicking;
 using Content.Server.Shuttles.Components;
@@ -78,7 +77,6 @@ public sealed class DropshipSystem : SharedDropshipSystem
     [Dependency] private readonly RMCAlertLevelSystem _alertLevelSystem = default!;
     [Dependency] private readonly AreaSystem _area = default!;
     [Dependency] private readonly IntelSystem _intel = default!;
-    [Dependency] private readonly ChatSystem _chat = default!;
 
     private EntityQuery<DockingComponent> _dockingQuery;
     private EntityQuery<DoorComponent> _doorQuery;
@@ -965,7 +963,7 @@ public sealed class DropshipSystem : SharedDropshipSystem
 
             if (time >= autoReturn.NextWarningAt && time < returnAt)
             {
-                _chat.DispatchGlobalAnnouncement(ThirdPartyAutoReturnAnnouncement, "Dropship Autopilot", playSound: false, colorOverride: Color.DarkOrange);
+                _popup.PopupEntity(ThirdPartyAutoReturnAnnouncement, uid, PopupType.LargeCaution);
                 autoReturn.NextWarningAt = time + autoReturn.WarningInterval;
                 Dirty(uid, autoReturn);
             }
@@ -998,7 +996,7 @@ public sealed class DropshipSystem : SharedDropshipSystem
         autoReturn.NextWarningAt = TimeSpan.Zero;
         Dirty(dropship, autoReturn);
 
-        _chat.DispatchGlobalAnnouncement("Automatic return to deep space commencing.", "Dropship Autopilot", playSound: false, colorOverride: Color.DarkOrange);
+        _popup.PopupEntity("Automatic return to deep space commencing.", dropship, PopupType.LargeCaution);
         if (!FlyTo(computer, autoReturn.ReturnDestination, null))
         {
             autoReturn.ReturnAt = _timing.CurTime + TimeSpan.FromSeconds(10);
