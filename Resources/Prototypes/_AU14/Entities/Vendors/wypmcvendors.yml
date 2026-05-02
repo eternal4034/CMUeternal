@@ -581,6 +581,8 @@
         amount: 5
     - name: Headgear
       entries:
+      - id: ArmorHelmetPMCFieldOfficer
+        amount: 5
       - id: RMCHeadCapWestonYamadaDark
         amount: 5
       - id: AU14WYPMCBallCap
