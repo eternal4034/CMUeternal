@@ -10,13 +10,14 @@
   - type: Tag
     tags:
     - VehicleHeavy
+  - type: RMCIgnoreGhostInteractionLimits
   - type: RequireProjectileTarget
   - type: GridVehicleMover
     maxSpeed: 2.5
-    acceleration: 1
+    acceleration: 1.154
     deceleration: 8
     maxReverseSpeed: 2
-    reverseAcceleration: 1
+    reverseAcceleration: 1.154
     turnDelay: 1
     turnInPlace: true
     turnInPlaceMaxSpeed: 0.5
@@ -85,9 +86,6 @@
   - type: Damageable
     damageContainer: StructuralMarine
     damageModifierSet: VehicleFrameTank
-  - type: MeleeReceivedMultiplier
-    xenoMultiplier: 3.4
-    otherMultiplier: 1
   - type: InteractionOutline
   - type: Sprite
     drawdepth: Mobs
