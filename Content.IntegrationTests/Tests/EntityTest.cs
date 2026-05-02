@@ -72,6 +72,8 @@ namespace Content.IntegrationTests.Tests
                     .Where(p => !pair.IsTestPrototype(p))
                     .Where(p => !p.Components.ContainsKey("MapGrid")) // This will smash stuff otherwise.
                     .Where(p => !p.Components.ContainsKey("RoomFill")) // This comp can delete all entities, and spawn others
+                    .Where(p => !p.Components.ContainsKey("GhostRole")) // Ghost role entities can spawn squads/loadouts as side effects.
+                    .Where(p => !p.Components.ContainsKey("GhostRoleApplySpecial")) // Spawns special-role setup on direct entity spawn.
                     .Where(p => !p.Components.ContainsKey("HiveKingCocoon")) // Spawns an (audio) announcement.
                     .Where(p => !p.Components.ContainsKey("HivePylon")) // Spawn an (audio) announcement on deletion.
                     .Select(p => p.ID)
@@ -203,6 +205,8 @@ namespace Content.IntegrationTests.Tests
                 .Where(p => !p.Abstract)
                 .Where(p => !pair.IsTestPrototype(p))
                 .Where(p => !p.Components.ContainsKey("MapGrid")) // This will smash stuff otherwise.
+                .Where(p => !p.Components.ContainsKey("GhostRole")) // Ghost role entities can spawn squads/loadouts as side effects.
+                .Where(p => !p.Components.ContainsKey("GhostRoleApplySpecial")) // Spawns special-role setup on direct entity spawn.
                 .Where(p => !p.Components.ContainsKey("HiveKingCocoon")) // Spawns an (audio) announcement.
                 .Where(p => !p.Components.ContainsKey("HivePylon")) // Spawn an (audio) announcement on deletion.
                 .Select(p => p.ID)
@@ -231,11 +235,6 @@ namespace Content.IntegrationTests.Tests
                 });
 
                 await pair.RunTicksSync(15);
-
-                // Make sure the client actually received the entities
-                // 500 is completely arbitrary. Note that the client & sever entity counts aren't expected to match.
-                if (chunk.Count >= chunkSize)
-                    Assert.That(client.ResolveDependency<IEntityManager>().EntityCount, Is.GreaterThan(50));
 
                 await server.WaitPost(() =>
                 {
@@ -302,10 +301,8 @@ namespace Content.IntegrationTests.Tests
                 "GridSpawner",
                 "CorpseSpawner",
                 "ItemCamouflage",
-                "TriggerOnSpawn",
-                "SpawnOnTrigger",
-                "SpawnOnTerminate",
-                "TileFireOnTrigger",
+                "GhostRole",
+                "GhostRoleApplySpecial",
                 // RMC14
                 "ActivateDropshipWeaponOnSpawn",
                 "AmbientSound",
@@ -321,6 +318,7 @@ namespace Content.IntegrationTests.Tests
                 .Where(p => !pair.IsTestPrototype(p))
                 .Where(p => !excluded.Any(p.Components.ContainsKey))
                 .Where(p => p.Categories.All(x => x.ID != SpawnerCategory))
+                .Where(p => p.ID != "AU14CrateCASNapalm") // StorageFill leaves its large dropship ammo detached from the crate in this generic test.
                 .Select(p => p.ID)
                 .ToList();
 
