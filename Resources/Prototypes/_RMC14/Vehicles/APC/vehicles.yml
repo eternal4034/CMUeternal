@@ -18,10 +18,11 @@
     deceleration: 10
     turnDelay: 0.4
     xenoBlockMinimumSize: Immobile
-    xenoPushMinimumSize: Immobile
+    canXenosPush: false
     canSmashWalls: true
     wallSmashMinSpeed: 3
     wallSmashWheelDamage: 0.4
+    blockingMobBypassNudgeLimit: 2
     wallSmashHullDamage: 15
     wallSmashSlowdownMultiplier: 0.2
     wallSmashSlowdownDuration: 1.5
@@ -292,6 +293,9 @@
     reverseAcceleration: 2.0
     turnDelay: 0.25
     turnInPlace: false
+    blockingMobBypassNudgeLimit: 2
+    xenoBlockMinimumSize: Immobile
+    canXenosPush: false
     speedAtZeroIntegrity: 0.5
   - type: Sprite
     sprite: _RMC14/Structures/Vehicles/sppapc.rsi

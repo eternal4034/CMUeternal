@@ -23,6 +23,7 @@ public sealed class VehicleTurretSystem : EntitySystem
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly HardpointSystem _hardpoints = default!;
 
     public override void Initialize()
     {
@@ -544,7 +545,17 @@ public sealed class VehicleTurretSystem : EntitySystem
         var target = turret.StabilizedRotation
             ? (turret.TargetRotation - vehicleRot).Reduced()
             : turret.TargetRotation;
-        if (turret.RotationSpeed <= 0f)
+        var rotationMultiplier = _hardpoints.GetTurretRotationMultiplier(turretUid);
+        if (rotationMultiplier <= 0f)
+            return;
+
+        var rotationSpeed = turret.RotationSpeed;
+        if (rotationSpeed <= 0f && rotationMultiplier < 0.999f)
+            rotationSpeed = 60f;
+
+        rotationSpeed *= rotationMultiplier;
+
+        if (rotationSpeed <= 0f)
         {
             if (turret.WorldRotation != target)
             {
@@ -556,7 +567,7 @@ public sealed class VehicleTurretSystem : EntitySystem
         }
 
         var delta = Angle.ShortestDistance(turret.WorldRotation, target);
-        var maxStep = MathHelper.DegreesToRadians(turret.RotationSpeed) * frameTime;
+        var maxStep = MathHelper.DegreesToRadians(rotationSpeed) * frameTime;
         if (Math.Abs(delta.Theta) <= maxStep)
         {
             if (turret.WorldRotation != target)

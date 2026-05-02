@@ -237,6 +237,16 @@ public sealed partial class HardpointMenu : FancyWindow
                 FontColorOverride = Color.FromHex("#8FA7C2")
             });
 
+            if (hardpoint.Failures.Count > 0)
+            {
+                centerColumn.AddChild(new Label
+                {
+                    Text = string.Join(" | ", hardpoint.Failures),
+                    FontColorOverride = Color.FromHex("#FFB45E"),
+                    HorizontalExpand = true
+                });
+            }
+
             var rightColumn = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Vertical,
