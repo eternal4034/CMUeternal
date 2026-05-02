@@ -47,13 +47,27 @@
   components:
   - type: PresetIdCard
     job: AU14JobCLFCellLeader
+  - type: Access
+    groups:
+    - Colonist
   - type: IdCard
     jobTitle: au14-id-job-title-colony-civilian
 
 - type: entity
   parent: AU14IDCardBaseCivilianNoIFF
   id: AU14IDCardCLFCivilian
-  name: colonist ID card
+  name: CLF guerilla ID card
+  components:
+  - type: Access
+    groups:
+    - Colonist
+  - type: IdCard
+    jobTitle: au14-id-job-title-colony-civilian
+
+- type: entity
+  parent: AU14IDCardBaseCivilianNoIFF
+  id: AU14IDCardCLFPhysician
+  name: CLF physician ID card
   components:
   - type: Access
     groups:
