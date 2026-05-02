@@ -17,6 +17,7 @@
   icon: "AU14JobIconGovWorkingJoe"
   spawnMenuRoleName: Working Joe (GOVFOR)
   supervisors: au14-job-supervisors-workingjoe-military
+  setPreference: false
   accessGroups:
   - AU14GovforCommand
   special:

@@ -882,6 +882,8 @@
   - MaintenanceJackAU14
   - PortableDialysisAU14
 
+# Doctor
+
 - type: loadoutGroup
   id: GOVFORDoctorEquipmentAU14
   name: au14-loadout-group-doctor-equipment
@@ -900,3 +902,13 @@
   maxLimit: 1
   loadouts:
   - ScrubsOliveRMC
+
+# Aux Tech
+
+- type: loadoutGroup
+  id: GOVFORAuxTechClothingAU14
+  name: au14-loadout-group-auxtech
+  minLimit: 1
+  maxLimit: 1
+  loadouts:
+  - GOVFORAuxTechClothingAU14Fatigues

@@ -417,12 +417,12 @@
     - ProdigySF
     - WEYU
     - VAIPO
-    - UPP
     platoonsGovfor:
     - LACN
     - CMBCIU
     - USCM
     - RMC
+    - UPP
     - HAZOPS
     defaultgovfor: USCM
     defaultopfor: WEYU
@@ -562,9 +562,9 @@
     - UPP
     - WEYU
     - VAIPO
-    - ProdigySF
     platoonsGovfor:
     - LACN
+    - ProdigySF
     - USCM
     - RMC
     defaultgovfor: UPP
@@ -660,6 +660,7 @@
     - RMC
     - UPP
     - HAZOPS
+    - ProdigySF
     - VAIPO
     defaultgovfor: USCM
     defaultopfor: UPP
