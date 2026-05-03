@@ -57,7 +57,7 @@
         Slash: 22.5
         Bloodloss: 11.25
   - type: Butcherable
-    butcheringType: Spike
+    butcheringType: Knife # Spike
     spawned:
     - id: FoodMeatFish
       amount: 8

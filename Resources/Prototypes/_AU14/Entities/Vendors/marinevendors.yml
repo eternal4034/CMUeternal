@@ -145,7 +145,7 @@
       - id: RMCBeltHolsterPistol
         amount: 20
       - id: RMCBeltHolsterRevolver
-        amount: 20
+        amount: 10
       - id: CMBeltKnifeFilled
         name: M276 Knife Rig (Full)
         amount: 2

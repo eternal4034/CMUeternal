@@ -7,8 +7,14 @@
   - type: Item
     size: Small
   - type: CMUBoneGraft
+  - type: Tag
+    tags:
+    - CMUBoneGraft
   - type: CMSurgeryTool
     skill: 1
   - type: Sprite
     sprite: _AU14/Objects/Medical/bonegraft.rsi
     state: bonegraft
+
+- type: Tag
+  id: CMUBoneGraft
