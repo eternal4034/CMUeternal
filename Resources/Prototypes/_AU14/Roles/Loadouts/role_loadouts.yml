@@ -428,6 +428,25 @@
   - CannedDrinksAU14
   - SmokablesRMC
 
+- type: roleLoadout
+  id: JobAU14JobCLFSurgeon
+  points: 7
+  groups:
+  - MedJumpsuitAU14
+  - MedHatsAU14
+  - MedJacketAU14
+  - MedGlovesAU14
+  - MedMaskAU14
+  - MedBeltAU14
+  - MedPouchAU14
+  - MedPouchRightAU14
+  - MedBackpackAU14
+  - ForceMedEssentialAU14
+  - PaperworkRMC
+  - RecreationalRMC
+  - CannedDrinksAU14
+  - SmokablesRMC
+
 # military
 # govfor
 - type: roleLoadout
