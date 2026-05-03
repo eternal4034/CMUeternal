@@ -2,14 +2,20 @@ using Content.Shared._CMU14.Medical;
 using Content.Shared._CMU14.Medical.Wounds;
 using Content.Shared._RMC14.Explosion;
 using Content.Shared._CMU14.Medical.Surgery;
+using Content.Server._CMU14.Medical.Surgery;
+using Content.Shared._RMC14.Marines.Skills;
 using Content.Shared._RMC14.Medical.Surgery;
 using Content.Shared._RMC14.Synth;
 using Content.Shared._RMC14.TacticalMap;
 using Content.Shared.Body.Components;
+using Content.Shared.Body.Organ;
+using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
 using Content.Shared.Damage;
+using Content.Shared.Eye;
 using Content.Shared.Explosion;
 using Content.Shared.FixedPoint;
+using Content.Shared.Standing;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
@@ -71,6 +77,156 @@ public sealed class RMCHumanPrototypeRegressionTest
             finally
             {
                 entMan.DeleteEntity(dummy);
+            }
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task CmuAttachedInternalsUsePrivateVisibilityLayer()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        await server.WaitAssertion(() =>
+        {
+            var entMan = server.EntMan;
+            var body = entMan.System<SharedBodySystem>();
+            var human = entMan.SpawnEntity("CMMobHuman", MapCoordinates.Nullspace);
+            var internalLayer = (ushort) VisibilityFlags.CMUMedicalInternals;
+
+            try
+            {
+                var checkedParts = 0;
+                foreach (var (partUid, _) in body.GetBodyChildren(human))
+                {
+                    checkedParts++;
+                    var visibility = entMan.GetComponent<VisibilityComponent>(partUid);
+                    Assert.That(visibility.Layer & internalLayer, Is.EqualTo(internalLayer));
+                }
+
+                var checkedOrgans = 0;
+                foreach (var organ in body.GetBodyOrgans(human))
+                {
+                    checkedOrgans++;
+                    var visibility = entMan.GetComponent<VisibilityComponent>(organ.Id);
+                    Assert.That(visibility.Layer & internalLayer, Is.EqualTo(internalLayer));
+                }
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(checkedParts, Is.GreaterThan(0));
+                    Assert.That(checkedOrgans, Is.GreaterThan(0));
+                });
+            }
+            finally
+            {
+                entMan.DeleteEntity(human);
+            }
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task CmuDetachedOrgansLeavePrivateVisibilityLayer()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        EntityUid human = default;
+        EntityUid organ = default;
+        var internalLayer = (ushort) VisibilityFlags.CMUMedicalInternals;
+
+        await server.WaitAssertion(() =>
+        {
+            var entMan = server.EntMan;
+            var body = entMan.System<SharedBodySystem>();
+            human = entMan.SpawnEntity("CMMobHuman", MapCoordinates.Nullspace);
+
+            foreach (var bodyOrgan in body.GetBodyOrgans(human))
+            {
+                organ = bodyOrgan.Id;
+                break;
+            }
+
+            Assert.That(organ, Is.Not.EqualTo(default(EntityUid)));
+
+            var visibility = entMan.GetComponent<VisibilityComponent>(organ);
+            Assert.That(visibility.Layer & internalLayer, Is.EqualTo(internalLayer));
+
+            Assert.That(body.RemoveOrgan(organ), Is.True);
+        });
+
+        await server.WaitRunTicks(1);
+
+        await server.WaitAssertion(() =>
+        {
+            var entMan = server.EntMan;
+            var visibility = entMan.GetComponent<VisibilityComponent>(organ);
+            Assert.That(visibility.Layer & internalLayer, Is.EqualTo(0));
+
+            entMan.DeleteEntity(organ);
+            entMan.DeleteEntity(human);
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task CmuSynthMissingLimbShowsSynthReattachSurgery()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        await server.WaitAssertion(() =>
+        {
+            var entMan = server.EntMan;
+            var body = entMan.System<SharedBodySystem>();
+            var dispatch = entMan.System<CMUSurgeryDispatchSystem>();
+            var standing = entMan.System<StandingStateSystem>();
+            var skills = entMan.System<SkillsSystem>();
+            var xform = entMan.System<SharedTransformSystem>();
+
+            var patient = entMan.SpawnEntity("CMMobHuman", MapCoordinates.Nullspace);
+            var surgeon = entMan.SpawnEntity("CMMobHuman", MapCoordinates.Nullspace);
+
+            try
+            {
+                entMan.EnsureComponent<SynthComponent>(patient);
+                skills.SetSkill(surgeon, "RMCSkillSurgery", 3);
+                standing.Down(patient, playSound: false, dropHeldItems: false, force: true);
+
+                EntityUid leftArm = default;
+                foreach (var (partUid, part) in body.GetBodyChildren(patient))
+                {
+                    if (part.PartType != BodyPartType.Arm || part.Symmetry != BodyPartSymmetry.Left)
+                        continue;
+                    leftArm = partUid;
+                    break;
+                }
+
+                Assert.That(leftArm, Is.Not.EqualTo(default(EntityUid)));
+                xform.DetachEntity(leftArm, entMan.GetComponent<TransformComponent>(leftArm));
+
+                var entries = dispatch.BuildPartEntries(patient, surgeon);
+                var leftArmEntry = entries.Find(entry =>
+                    entry.Type == BodyPartType.Arm &&
+                    entry.Symmetry == BodyPartSymmetry.Left);
+
+                Assert.That(leftArmEntry, Is.Not.Null);
+
+                var surgeryIds = leftArmEntry!.EligibleSurgeries.ConvertAll(entry => entry.SurgeryId);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(surgeryIds, Does.Contain("RMCSynthSurgeryReattachLimb"));
+                    Assert.That(surgeryIds, Does.Not.Contain("CMUSurgeryReattachLimb"));
+                });
+            }
+            finally
+            {
+                entMan.DeleteEntity(patient);
+                entMan.DeleteEntity(surgeon);
             }
         });
 
