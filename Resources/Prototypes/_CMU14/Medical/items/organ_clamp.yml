@@ -7,8 +7,14 @@
   - type: Item
     size: Small
   - type: CMUOrganClamp
+  - type: Tag
+    tags:
+    - CMUOrganClamp
   - type: CMSurgeryTool
     skill: 2
   - type: Sprite
     sprite: _AU14/Objects/Medical/organclamp.rsi
     state: organclamp
+
+- type: Tag
+  id: CMUOrganClamp

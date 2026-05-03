@@ -9,6 +9,12 @@
   - type: CMUCastItem
     applyDelay: 6
     maxSuppressed: Simple
+  - type: Tag
+    tags:
+    - CMUCastItem
   - type: Sprite
     sprite: _AU14/Objects/Medical/cast.rsi
     state: cast
+
+- type: Tag
+  id: CMUCastItem
