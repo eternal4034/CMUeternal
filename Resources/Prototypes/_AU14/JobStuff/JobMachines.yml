@@ -32,9 +32,6 @@
     containers:
       CashSlot: !type:ContainerSlot {}
 
-
-
-
 - type: entity
   parent: BaseStructure
   id: AUSubmissionPointBase
@@ -78,7 +75,7 @@
       - Fruit
       - CottonBoll
       - CMUGrain
-    
+
 - type: entity
   parent: AUSubmissionPointBase
   id: AUSubmissionPointSteel
@@ -166,7 +163,6 @@
       - Xeno
   - type: ColonyCommsConsole
 
-
 - type: entity
   id: AUColonyIntercom
   name: Colony Intercom
@@ -201,7 +197,6 @@
   - type: Transform
     noRot: false
     anchored: true
-
 
 - type: entity
   id: colonysiren
@@ -254,7 +249,6 @@
       enum.ColonyAtmUi.Key:
         type: ColonyAtmBui
   - type: ColonyAtm
-
 
 # Department Consoles
 - type: entity
@@ -329,12 +323,11 @@
     departmentAccessLevel: CMAccessColonyBrig
     defaultSalary: 60
 
-
 - type: entity
   parent: AUDepartmentConsoleBase
   id: AUDepartmentConsoleLabor
   name: Labor Department Console
-  description: Manages employees, salaries, and announcements for the Labor  department.
+  description: Manages employees, salaries, and announcements for the Labor department.
   components:
   - type: DepartmentConsole
     departmentName: Cargo
@@ -392,3 +385,26 @@
     colonyManaged: false
     asrsFaction: corporate
 
+- type: entity
+  parent: AUDepartmentConsoleBase
+  id: AUDepartmentConsoleHydroponics
+  name: Hydroponics Department Console
+  description: Manages employees, salaries, and announcements for the Hydroponics department.
+  components:
+  - type: DepartmentConsole
+    departmentName: Hydroponics
+    departmentId: SLOP
+    departmentAccessLevel: CMAccessColonyPublic
+    defaultSalary: 45
+
+- type: entity
+  parent: AUDepartmentConsoleBase
+  id: AUDepartmentConsoleLumbermill
+  name: Lumbermill Department Console
+  description: Manages employees, salaries, and announcements for the Lumbermill department.
+  components:
+  - type: DepartmentConsole
+    departmentName: Lumbermill
+    departmentId: SLOP2
+    departmentAccessLevel: CMAccessColonyPublic
+    defaultSalary: 45
