@@ -54,7 +54,7 @@
   - type: Speech
     speechVerb: LargeMob
   - type: Butcherable
-    butcheringType: Spike
+    butcheringType: Knife # Spike
     spawned:
     - id: FoodMeatFish
       amount: 2
