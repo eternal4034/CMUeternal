@@ -154,3 +154,19 @@
   departmentRadio: null
   headOfDepartment: null
   faction: colonist
+
+- type: department
+  parent: CMDepartmentBase
+  abstract: true
+  id: AU14DepartmentHydroponics
+  departmentRadio: null
+  headOfDepartment: null
+  faction: colonist
+
+- type: department
+  parent: CMDepartmentBase
+  abstract: true
+  id: AU14DepartmentLumbermill
+  departmentRadio: null
+  headOfDepartment: null
+  faction: colonist

@@ -393,7 +393,7 @@
   components:
   - type: DepartmentConsole
     departmentName: Hydroponics
-    departmentId: SLOP
+    departmentId: AU14DepartmentHydroponics
     departmentAccessLevel: CMAccessColonyPublic
     defaultSalary: 45
 
@@ -405,6 +405,6 @@
   components:
   - type: DepartmentConsole
     departmentName: Lumbermill
-    departmentId: SLOP2
+    departmentId: AU14DepartmentLumbermill
     departmentAccessLevel: CMAccessColonyPublic
     defaultSalary: 45
