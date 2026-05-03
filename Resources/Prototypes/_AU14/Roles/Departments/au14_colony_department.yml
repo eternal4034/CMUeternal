@@ -143,7 +143,7 @@
   parent: CMDepartmentBase
   id: AU14DepartmentOrbital
   name: au14-department-ambassadors
-  description: au14-department-criminal-ambassadors
+  description: au14-department-ambassadors-description
   color: "#e3ce94"
   roles:
     - AU14JobCivilianAmbassadorUPP
