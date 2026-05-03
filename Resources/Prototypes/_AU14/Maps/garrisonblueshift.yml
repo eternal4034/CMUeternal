@@ -22,6 +22,8 @@
             # Colony Command (non department)
             AU14JobCivilianCorporateLiaison: [1, 1]
             AU14JobCivilianColonyAdministrator: [1, 1]
+            AU14JobCivilianAmbassadorICSC: [1, 1]
+            AU14JobCivilianAmbassadorTWE: [1, 1]
 
             # Security/LEO
             AU14JobCivilianCMBMarshal: [1, 1]
