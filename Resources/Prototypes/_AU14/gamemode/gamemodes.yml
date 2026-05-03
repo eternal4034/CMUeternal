@@ -192,6 +192,7 @@
     jobs:
       AU14JobCLFCellLeader: 1
       AU14JobCLFPhysician: 1
+      AU14JobCLFSurgeon: 1
       AU14JobCLFGuerilla: 3
 
 - type: entity
