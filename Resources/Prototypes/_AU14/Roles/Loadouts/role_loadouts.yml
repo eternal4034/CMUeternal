@@ -665,3 +665,18 @@
   - SmokablesRMC
   - ForceStampApprovedAU14
   - ForceSynthResetKeyAU14
+
+- type: roleLoadout
+  id: JobAU14JobGOVFORAuxTech
+  points: 7
+  groups:
+  - GOVFORAuxTechClothingAU14
+  - MarineBackpack
+  - EyewearRMCPVE
+  - MasksRMCPVE
+  - HeadwearRMCPVE
+  - HelmetGarbsRMCPVE
+  - PaperworkRMC
+  - RecreationalRMC
+  - CannedDrinksAU14
+  - SmokablesRMC

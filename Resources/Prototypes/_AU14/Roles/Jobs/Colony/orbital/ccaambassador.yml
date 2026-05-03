@@ -11,6 +11,7 @@
   icon: "AU14JobIconCCAAmbassador"
   requireAdminNotify: false
   joinNotifyCrew: false
+  whitelisted: true
   supervisors: au14-job-supervisors-orbital
   accessGroups:
   - Colonist

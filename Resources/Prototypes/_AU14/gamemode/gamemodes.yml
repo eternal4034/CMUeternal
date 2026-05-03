@@ -158,8 +158,9 @@
       AU14JobGOVFORSquadRifleman: 75
       AU14JobGOVFORAuxSupportSynth: 2
       AU14JobGOVFORadvisor: 1
-      AU14JobGOVFORMilitaryDoctor: 4
+      AU14JobGOVFORMilitaryDoctor: 3
       AU14JobGOVFORMilitaryPoliceMan: 2
+      AU14JobGOVFORAuxTech: 1
 
 - type: entity
   id: AddOpfor
