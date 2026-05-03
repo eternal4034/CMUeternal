@@ -89,10 +89,10 @@
         amount: 4
       - id: AU14M276ShotgunShellLoadingRigBlack
         amount: 6
-      - id: RMCBeltHolsterPistolTSE
-        amount: 20
       - id: AU14BeltHolsterPistolBlack
         amount: 20
+      - id: RMCBeltHolsterRevolver
+        amount: 10
       - id: CMBeltSecurityMarshal
         amount: 30
       - id: AU14BeltUtilityGeneralBlack
