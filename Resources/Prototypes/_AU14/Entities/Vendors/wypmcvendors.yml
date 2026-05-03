@@ -800,7 +800,7 @@
       - id: RMCWeaponRifleM54C2
         amount: 8
       - id: AU14WeaponRifleF44AA
-        amount: 5
+        amount: 1
     - name: primary ammunition
       entries:
       - id: RMCMagazineSMGFP9000
@@ -820,7 +820,7 @@
       - id: RMCMagazineRifleM54CWP
         amount: 5
       - id: AU14MagazineRifleF44AA
-        amount: 100
+        amount: 5
       - id: RMCBoxShotgunBuckshot
         amount: 20
       - id: RMCBoxShotgunFlechette
